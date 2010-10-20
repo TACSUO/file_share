@@ -33,6 +33,7 @@ class FileAttachmentsController < ApplicationController
     end
     def has_authorization?(*args)
       # stub
+      true
     end
   protected
   public
