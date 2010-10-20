@@ -12,9 +12,9 @@
 <% 
 #end
 %>
-<% content_tag :div do %>
-  <% semantic_form_for @file_attachment do |form| %>
-    <% form.inputs do %>
+<%= content_tag :div do %>
+  <%= semantic_form_for @file_attachment do |form| %>
+    <%= form.inputs do %>
       <%= form.input :name, :hint => 'something memorable' %>
       <%= 
       #form.input :event, :hint => 'does this file belong somewhere else?'
