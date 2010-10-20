@@ -1,0 +1,13 @@
+if @file_attachment.valid?
+  page << %Q{
+    $('#blank_description_form').hide();
+    $('#file_attachment_#{@file_attachment.id}_description').replaceWith('#{description_display(@file_attachment)}');
+    $('#file_attachment_#{@file_attachment.id}').effect('highlight', {
+      color: '#C3D9FF'
+    }, 2500)
+  }
+else
+  page << %Q{
+    alert("The file description could not be saved.");
+  }
+end

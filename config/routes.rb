@@ -1,4 +1,10 @@
 FileShare::Application.routes.draw do
+  root :to => "file_attachments#index"
+  resources :file_attachments do
+    member do
+      get :download
+    end
+  end
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

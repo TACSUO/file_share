@@ -1,0 +1,140 @@
+<% content_for(:javascript) do %>
+  <style  type="text/css">@import url(http://www.plupload.com/css/plupload.queue.css);</style>
+  <script type="text/javascript"  src="http://www.google.com/jsapi"></script>
+  <%= javascript_include_tag 'plupload/gears_init.js' %>
+  <%= javascript_include_tag 'plupload/plupload.full.min.js' %>
+  <%= javascript_include_tag 'plupload/jquery.plupload.queue.min.js' %>
+
+  <script type="text/javascript">
+  jQuery.ajaxSetup({
+    'beforeSend': function(xhr) {
+      xhr.setRequestHeader("Accept", "text/javascript");
+    }
+  });
+  function bindCallbacks(plupload) {
+    plupload.bind('FileUploaded', function(up, file, response) {
+  	  $("#file_attachments").append(response.response);
+  	});
+  }
+  // Convert divs to queue widgets when the DOM is ready
+  $(function() {
+  	// Setup html5 version
+  	$("#multiple_uploads").pluploadQueue({
+  		// General settings
+  		runtimes : 'html5', // use only html5
+  		url : '<%= file_attachments_path %>',
+  		dragdrop: false,
+  		setup: bindCallbacks,
+  		multipart: true,
+  		multipart_params: {
+  		  <%= "event_id: '#{event.id}'," if defined?(event) %>
+  		  authenticity_token: '<%= form_authenticity_token %>'
+  		},
+  		required_features: 'multipart', // disable uploader if html5+multipart not available - webkit doesn't support html5+multipart
+  		max_file_size : '50mb',
+  		unique_names : true,
+
+  		// Resize images on clientside if we can
+  		resize : {width : 320, height : 240, quality : 90},
+
+  		// Specify what files to browse for
+  		filters : [
+  			{title : "Image files", extensions : "jpg,gif,png,svg"},
+  			{title : "Zip files", extensions : "zip"},
+  			{title : "PDF documents", extensions : "pdf"},
+  			{title : "Word documents", extensions : "doc"},
+  			{title : "Power Point presentations", extensions : "ppt"},
+  			{title : "Excel spreadsheets", extensions : "xls"},
+  			{title : "Plain text files", extensions : "txt"}
+  		],
+
+  		// Flash settings
+  		// flash_swf_url : '/plupload/js/plupload.flash.swf'
+  	});
+  });
+  
+  $(window).load(function() {
+    <% if !params[:std].nil? %>
+      $('#linker').hide();
+      $('#unlinker').show();
+      $('#file_block').show();
+    <% else %>
+      $('#linker').show();
+      $('#unlinker').hide();
+      $('#file_block').hide();
+    <% end %> 
+  });
+  </script>
+  
+  
+<% end %>
+
+<h3>Downloadable Resources<hr /></h3>
+
+<% if defined?(file_attachments) %>
+
+  <div id="file_attachments">
+    <%= render :partial => 'file_attachments/file_attachment', :collection => file_attachments %>
+  </div>
+
+  <div id="blank_description_form" style="display: none; padding: 5px 0;">
+    <form class="formtastic file_attachment" id="new_description" method="post" action="#">
+      <div style="margin: 0pt; padding: 0pt; display: inline;">
+        <input type="hidden" value="put" name="_method" />
+        <input type="hidden" value="<%= form_authenticity_token %>" name="authenticity_token" />
+      </div>
+      <textarea id="file_attachment_description" style="height: 70px; width: 69%" name="file_attachment[description]"></textarea>
+      <br />
+      <input type="submit" value="Update" />
+    </form>
+  </div>
+
+  <% content_for(:javascript) do %>
+  <script type="text/javascript">
+  jQuery.ajaxSetup({
+    'beforeSend': function(xhr) {
+      xhr.setRequestHeader("Accept", "text/javascript");
+    }
+  });
+
+  jQuery(function($) {
+    $("a.file_attachment_dynamic_form_link").attach(DynamicForm, {
+      formId: 'new_description',
+      formContainer: 'blank_description_form',
+      actionPrefix: '/file_attachments',
+      targetIdName: 'file_attachment_id',
+      targetContentName: 'file_attachment[description]',
+      targetContentType: 'textarea'
+    });
+    $("#new_description").attach(Remote.Form);
+  });
+  </script>
+  <% end %>
+
+<% end %>
+<p id="linker" class="upload_block_linker" style="display:none; text-align: right;">
+  <a href="?show=upload_files_block&toggle=upload_block_unlinker&hide=upload_block_linker" class="show_hide_link fake_button">Upload Files</a>
+</p>
+<p id="unlinker" class="upload_block_unlinker" style="display:none; text-align: right;">
+  <a href="<%= url_for(:controller => controller_name, :action => action_name) %>" class="fake_button">Cancel</a>
+</p>
+
+<div id="file_block" class="upload_files_block" style="">
+  <h4>Upload Files<hr /></h4>
+
+  <p>
+    <%= link_to_unless params[:std] == '1', "One at a time", url_for(:controller => controller_name, :action => action_name, :std => 1), :class => 'fake_button' %>
+    <%= link_to_if params[:std] == '1', "Several at once", url_for(:controller => controller_name, :action => action_name, :std => 0), :class => 'fake_button' %>
+  </p>
+
+  <% if params[:std] && params[:std] == '1' %>
+  <div id="single_upload" style="width: 33%;">
+    <%= render :partial => 'file_attachments/upload_form', :locals => {:event => event} if defined?(event) %>
+    <%= render :partial => 'file_attachments/upload_form' unless defined?(event) %>
+  </div>
+  <% elsif params[:std].nil? || params[:std] == '0' %>
+  <div id="multiple_uploads">
+    You browser doesn't support native upload. Try Firefox 3 or Safari 4.
+  </div>
+  <% end %>
+</div>

@@ -1,0 +1,37 @@
+<div id="file_attachments">
+  <%= render :partial => 'file_attachments/file_attachment', :collection => file_attachments %>
+</div>
+
+<div id="blank_description_form" style="display: none; padding: 5px 0;">
+  <form class="formtastic file_attachment" id="new_description" method="post" action="#">
+    <div style="margin: 0pt; padding: 0pt; display: inline;">
+      <input type="hidden" value="put" name="_method" />
+      <input type="hidden" value="<%= form_authenticity_token %>" name="authenticity_token" />
+    </div>
+    <textarea id="file_attachment_description" style="height: 70px; width: 69%" name="file_attachment[description]"></textarea>
+    <br />
+    <input type="submit" value="Update" />
+  </form>
+</div>
+
+<% content_for(:javascript) do %>
+<script type="text/javascript">
+jQuery.ajaxSetup({
+  'beforeSend': function(xhr) {
+    xhr.setRequestHeader("Accept", "text/javascript");
+  }
+});
+
+jQuery(function($) {
+  $("a.file_attachment_dynamic_form_link").attach(DynamicForm, {
+    formId: 'new_description',
+    formContainer: 'blank_description_form',
+    actionPrefix: '/file_attachments',
+    targetIdName: 'file_attachment_id',
+    targetContentName: 'file_attachment[description]',
+    targetContentType: 'textarea'
+  });
+  $("#new_description").attach(Remote.Form);
+});
+</script>
+<% end %>
