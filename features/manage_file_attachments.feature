@@ -7,4 +7,4 @@ Feature: Manage file attachments
     And I fill in "file_attachment[description]" with "Description for somefile.txt"
     And I press "Update File attachment"
     Then I should see "Description for somefile.txt"
-    And I should be on the homepage
+    And I should be on the file attachments page

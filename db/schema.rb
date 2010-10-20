@@ -16,11 +16,12 @@ ActiveRecord::Schema.define(:version => 20101020002635) do
     t.string   "name"
     t.text     "description"
     t.string   "filepath"
-    t.integer  "event_id"
+    t.integer  "attachable_id"
+    t.string   "attachable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "file_attachments", ["event_id"], :name => "index_file_attachments_on_event_id"
+  add_index "file_attachments", ["attachable_id"], :name => "index_file_attachments_on_attachable_id"
 
 end

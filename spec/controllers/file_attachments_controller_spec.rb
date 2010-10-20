@@ -25,7 +25,7 @@ describe FileAttachmentsController do
       context "no file is selected for upload" do
         it "redirects to the home page if no file was uploaded" do
           post :create, :file_attachment => {}
-          response.should redirect_to(root_path(:std => 1))
+          response.should redirect_to(file_attachments_path(:std => 1))
         end
         it "sets a flash[:warning]" do
           post :create, :file_attachment => {}
@@ -60,7 +60,7 @@ describe FileAttachmentsController do
         })
         FileAttachment.stub(:new).and_return(mock_file)
         post :create, :file_attachment => @params
-        response.should redirect_to root_path(:std => 1)
+        response.should redirect_to file_attachments_path(:std => 1)
       end
     end
     

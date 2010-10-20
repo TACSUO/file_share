@@ -15,6 +15,7 @@ class FileAttachment < ActiveRecord::Base
   validates_presence_of :name, :filepath
   
   # belongs_to :event
+  belongs_to :attachable, :polymorphic => true
   
   before_validation_on_create :autofill_blank_name
   before_validation_on_create :save_to_folder_path
@@ -69,6 +70,12 @@ class FileAttachment < ActiveRecord::Base
     end
   protected
   public
+    def containers
+      return [] if attachables.count == 0
+      attachables.all.collect do |attachable|
+        attachable.container
+      end
+    end
     def full_path
       "#{FOLDER_ROOT}/#{filepath}"
     end

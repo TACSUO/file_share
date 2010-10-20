@@ -1,0 +1,5 @@
+Description:
+    Install file_share
+
+Example:
+    rails generate file_share:install

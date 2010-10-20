@@ -1,4 +1,4 @@
-FileShare::Application.routes.draw do
+Rails.application.routes.draw do
   root :to => "file_attachments#index"
   resources :file_attachments do
     member do

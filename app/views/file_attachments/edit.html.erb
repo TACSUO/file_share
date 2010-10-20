@@ -1,7 +1,7 @@
 <% 
 #if @file_attachment.event_id.nil?
 %>
-<p><%= link_to '< back', root_path, :class => 'fake_button' %></p>
+<p><%= link_to '< back', file_attachments_path, :class => 'fake_button' %></p>
 <%
 #else
 %>

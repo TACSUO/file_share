@@ -1,4 +1,4 @@
-class FileAttachmentsController < ApplicationController
+class FileAttachmentsController < FileShare::ApplicationController
   
   # before_filter :load_and_authorize_current_user, :except => [:index, :show, :download]
   
@@ -10,26 +10,26 @@ class FileAttachmentsController < ApplicationController
     def file_not_found(e)
       logger.error("FileAttachmentsController[#{action_name}] was rescued with :file_not_found. #{e.message}")
       flash[:warning] = "The physical file could not be located so your request could not be completed."
-      redirect_back_or_default(root_path)
+      redirect_back_or_default(file_attachments_path)
     end
     def redirect_to_index_or_event(params={})
       if defined?(@file_attachment)
         #unless @file_attachment.event_id.blank?
         #  redirect_to(event_path(@file_attachment.event_id, params)) and return
         #else
-          redirect_to(root_path(params)) and return
+          redirect_to(file_attachments_path(params)) and return
         #end
       else
-        redirect_back_or_default(root_path(params)) and return
+        redirect_back_or_default(file_attachments_path(params)) and return
       end
     end
     def redirect_back_or_default(default)
-      unless session[:return_to] && session[:return_to] == new_user_session_path
-        redirect_to(session[:return_to] || default)
-      else
+      #unless session[:return_to] && session[:return_to] == new_user_session_path
+      #  redirect_to(session[:return_to] || default)
+      #else
         redirect_to(default)
-      end
-      session[:return_to] = nil
+      #end
+      #session[:return_to] = nil
     end
     def has_authorization?(*args)
       # stub

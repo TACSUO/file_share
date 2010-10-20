@@ -4,12 +4,13 @@ class CreateFileAttachments < ActiveRecord::Migration
       t.string :name
       t.text :description
       t.string :filepath
-      t.integer :event_id
+      t.integer :attachable_id
+      t.string :attachable_type
 
       t.timestamps
     end
     
-    add_index :file_attachments, :event_id
+    add_index :file_attachments, :attachable_id
   end
 
   def self.down
