@@ -8,6 +8,7 @@ gem "formtastic"
 
 group :development, :test do
   gem "engineer"
+  gem "rcov"
   gem "rspec-rails"
   gem "acts_as_fu"
   gem "cucumber-rails"
