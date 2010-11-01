@@ -85,4 +85,9 @@ class FileAttachment < ActiveRecord::Base
       return true if File.exists?(full_path) && File.basename(full_path) != FOLDER
       return false
     end
+    def file_container=(container)
+      p = container.split("_")
+      self.attachable_type = p[0]
+      self.attachable_id = p[1]
+    end
 end

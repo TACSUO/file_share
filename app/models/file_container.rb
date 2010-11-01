@@ -1,4 +1,6 @@
 module FileContainer
+  mattr_reader :types
+  
   @@types ||= []
 
   def self.included(base)
@@ -7,9 +9,6 @@ module FileContainer
     base.instance_eval do
       include Associations
     end
-  end
-  def self.types
-    @@types.sort
   end
 
   module Associations

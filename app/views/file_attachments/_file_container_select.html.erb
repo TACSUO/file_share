@@ -1,0 +1,14 @@
+<select id="file_container_select" name="file_attachment[file_container]">
+  <% @file_containers.group_by(&:class).each do |klass, file_containers| %>
+    <option value=""></option>
+    <optgroup label="<%= klass.to_s.pluralize %>">
+      <%= render({
+        :partial => 'file_container_option',
+        :collection => file_containers,
+        :locals => {
+          :selected => selected
+        }
+      }) %>
+    </optgroup>
+  <% end %>
+</select>

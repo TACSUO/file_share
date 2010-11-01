@@ -16,6 +16,12 @@
   <%= semantic_form_for @file_attachment do |form| %>
     <%= form.inputs do %>
       <%= form.input :name, :hint => 'something memorable' %>
+      <%= render({
+        :partial => 'file_container_select',
+        :locals => {
+          :selected => "#{@file_attachment.attachable_type}_#{@file_attachment.attachable_id}"
+        }
+      }) %>
       <%= 
       #form.input :event, :hint => 'does this file belong somewhere else?'
       %>

@@ -1,13 +1,24 @@
 require 'spec_helper'
 
-describe FileAttachmentsController do
+describe FileAttachmentsController do  
   def flash_now 
     controller.instance_eval{flash.stub!(:sweep)} 
   end
+  
+  def mock_container
+    @mock_container ||= mock_model(FileAttachment)
+  end
 
   def mock_file_attachment
-    @mock_file_attachment ||= mock_model(FileAttachment, 
-      :uploaded_file => some_file, :filepath= => nil, :name => 'what', :save => true)
+    @mock_file_attachment ||= mock_model(FileAttachment, {
+      :uploaded_file => some_file,
+      :filepath= => nil,
+      :name => 'what',
+      :attachable_id => mock_container.id,
+      :attachable_type => mock_container.type,
+      :attachable => mock_container,
+      :save => true
+    })
   end
 
   def some_file
@@ -17,8 +28,12 @@ describe FileAttachmentsController do
   describe "when logged in as admin" do
     before do
       FileAttachment.stub(:new).and_return(mock_file_attachment)
-      @params = { :description => "blah blah", :name => "agenda",
-        :uploaded_file => some_file }
+      @params = {
+        :description => "blah blah",
+        :name => "agenda",
+        :uploaded_file => some_file,
+        :container => "MockContainer_#{mock_container.id}"
+      }
     end
     
     context "http upload" do
@@ -32,15 +47,22 @@ describe FileAttachmentsController do
           flash[:warning].should_not be_nil
         end
       end
-      it "should upload a new file attachment with an event" do
-        pending
+      it "should upload a new file attachment with an attachable" do
         FileAttachment.should_receive(:new).and_return(mock_file_attachment)
         post :create, :file_attachment => @params
-        #response.should redirect_to(event_url(:std => 1))
+        response.should redirect_to(file_attachment_path(mock_container, {:std => 1}))
       end
-      it "should upload a new file attachment without an event" do
-        # @params.merge!(:event_id => '')
-        mock_file = mock_model(FileAttachment, @params.merge({:save => nil, :errors => mock('Error', {:full_messages => []})}))
+      it "should upload a new file attachment without an attachable" do
+        @params.merge!(:container => '')
+        mock_file = mock_model(FileAttachment, @params.merge({
+          :save => nil,
+          :errors => mock('Error', {
+            :full_messages => []
+          }),
+          :attachable_id => '',
+          :attachable_type => '',
+          :attachable => nil
+        }))
         FileAttachment.should_receive(:new).and_return(mock_file)
         post :create, :file_attachment => @params
       end
@@ -48,15 +70,19 @@ describe FileAttachmentsController do
         mock_file_attachment.should_receive(:save)
         post :create, :file_attachment => @params
       end
-      it "when file is attached to event, redirect to the event page" do
-        pending
+      it "when file is attached to an attachable, redirect to the attachable page" do
         post :create, :file_attachment => @params
-        #response.should redirect_to event_path(@mock_file_attachment.event.id, :std => 1)
+        response.should redirect_to file_attachment_path(mock_container, :std => 1)
       end
       it "when file is not attached, redirect to the file attachments page" do
         mock_file = mock_model(FileAttachment, {
-          :uploaded_file => some_file, :filepath => nil, :name => 'what',
-          :save => true
+          :uploaded_file => some_file,
+          :filepath => nil,
+          :name => 'what',
+          :save => true,
+          :attachable_id => '',
+          :attachable_type => '',
+          :attachable => nil
         })
         FileAttachment.stub(:new).and_return(mock_file)
         post :create, :file_attachment => @params
@@ -70,11 +96,13 @@ describe FileAttachmentsController do
         @params.delete(:name) && @params.delete(:description)
       end
       
-      it "should upload a new file attachment with an event" do
+      it "should upload a new file attachment with an attachable" do
         FileAttachment.should_receive(:new).and_return(mock_file_attachment)
         
         post :create, {
-          :file => some_file
+          :file => some_file,
+          :attachable_type => 'MockContainer',
+          :attachable_id => mock_container.id
         }
         
         assigns[:file_attachment].should == mock_file_attachment
@@ -151,6 +179,13 @@ describe FileAttachmentsController do
       assigns[:file_attachment].should == @mock_file_attachment
     end
     
+    it "loads potential containers as @file_containers" do
+      FileContainer.stub(:types).and_return([mock_container.class])
+      mock_container.class.should_receive(:all).and_return([mock_container])
+      get :edit, :id => "1"
+      assigns[:file_containers].should eql [mock_container]
+    end
+    
   end
   
   describe ":update, :id => integer, :file_attachment => {}" do
@@ -189,9 +224,8 @@ describe FileAttachmentsController do
       end
     
       it "redirects to index or event for file" do
-        pending
         put :update, :id => "1"
-        #response.should redirect_to(event_path(mock_event.id))
+        response.should redirect_to(file_attachment_path(mock_container))
       end
     
     end
@@ -238,6 +272,28 @@ describe FileAttachmentsController do
         :buffer_size => 1.megabyte
       )
       get :download, :id => mock_file_attachment.id
+    end
+  end
+  
+  describe ":index" do
+    before(:each) do
+      FileAttachment.stub(:all).and_return([mock_file_attachment])
+      mock_container.class.stub(:all).and_return([mock_container])
+    end
+    it "loads file attachments as @file_attachments" do
+      FileAttachment.should_receive(:all).and_return([mock_file_attachment])
+      get :index
+      assigns[:file_attachments].should eql [mock_file_attachment]
+    end    
+    it "loads potential containers as @file_containers" do
+      FileContainer.stub(:types).and_return([mock_container.class])
+      mock_container.class.should_receive(:all).and_return([mock_container])
+      get :index
+      assigns[:file_containers].should eql [mock_container]
+    end
+    it "renders the index template" do
+      get :index
+      response.should render_template("file_attachments/index")
     end
   end
 

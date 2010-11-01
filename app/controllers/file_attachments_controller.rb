@@ -1,5 +1,7 @@
 class FileAttachmentsController < FileShare::ApplicationController
   
+  layout 'file-share'
+  
   # before_filter :load_and_authorize_current_user, :except => [:index, :show, :download]
   
   rescue_from Errno::ENOENT, :with => :file_not_found
@@ -14,11 +16,11 @@ class FileAttachmentsController < FileShare::ApplicationController
     end
     def redirect_to_index_or_event(params={})
       if defined?(@file_attachment)
-        #unless @file_attachment.event_id.blank?
-        #  redirect_to(event_path(@file_attachment.event_id, params)) and return
-        #else
+        unless @file_attachment.attachable_id.blank?
+          redirect_to(polymorphic_path(@file_attachment.attachable, params)) and return
+        else
           redirect_to(file_attachments_path(params)) and return
-        #end
+        end
       else
         redirect_back_or_default(file_attachments_path(params)) and return
       end
@@ -35,11 +37,17 @@ class FileAttachmentsController < FileShare::ApplicationController
       # stub
       true
     end
+    def load_containers
+      @file_containers = FileContainer.types.collect do |type|
+        type.all
+      end.flatten! || []
+    end
   protected
   public
 
     def index
       @file_attachments = FileAttachment.all
+      load_containers
     end
   
     def download
@@ -47,7 +55,6 @@ class FileAttachmentsController < FileShare::ApplicationController
       file_itself = File.open(file_attachment.full_path, 'r')
       logger.debug("FILE ATTACHMENT INFO: #{file_attachment.inspect}")
       logger.debug("FILE INFO: #{file_itself.inspect}")
-      #logger.debug("FILE CONTENTS: #{file_itself.read}")
       send_data(file_itself.read, :filename => File.basename(file_itself.path), :stream => true, :buffer_size => 1.megabyte)
     end
   
@@ -56,7 +63,12 @@ class FileAttachmentsController < FileShare::ApplicationController
         file_params = {
           :uploaded_file => params[:file]
         }
-        #file_params.merge!({:event_id => params[:event_id]}) if params[:event_id]
+        if params[:attachable_id] && params[:attachable_type]
+          file_params.merge!({
+            :attachable_id => params[:attachable_id],
+            :attachable_type => params[:attachable_type]
+          })
+        end
         @file_attachment = FileAttachment.new file_params
       elsif params[:file_attachment] && params[:file_attachment][:uploaded_file]
         @file_attachment = FileAttachment.new params[:file_attachment]
@@ -80,6 +92,7 @@ class FileAttachmentsController < FileShare::ApplicationController
     
     def edit
       @file_attachment = FileAttachment.find(params[:id])
+      load_containers
     end
     
     def update

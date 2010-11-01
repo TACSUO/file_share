@@ -15,6 +15,13 @@
     plupload.bind('FileUploaded', function(up, file, response) {
   	  $("#file_attachments").append(response.response);
   	});
+  	plupload.bind('UploadFile', function(up, file) {
+  	  attachable_params = $('#file_container_select').val().split('_');
+  	  $.extend(up.settings.multipart_params, {
+  	    attachable_id: attachable_params[1],
+  	    attachable_type: attachable_params[0]
+  	  });
+  	});
   }
   // Convert divs to queue widgets when the DOM is ready
   $(function() {
@@ -27,7 +34,6 @@
   		setup: bindCallbacks,
   		multipart: true,
   		multipart_params: {
-  		  <%= "event_id: '#{event.id}'," if defined?(event) %>
   		  authenticity_token: '<%= form_authenticity_token %>'
   		},
   		required_features: 'multipart', // disable uploader if html5+multipart not available - webkit doesn't support html5+multipart
@@ -113,7 +119,7 @@
 
 <% end %>
 <p id="linker" class="upload_block_linker" style="display:none; text-align: right;">
-  <a href="?show=upload_files_block&toggle=upload_block_unlinker&hide=upload_block_linker" class="show_hide_link fake_button">Upload Files</a>
+  <a href="<%= url_for(:controller => controller_name, :action => action_name) %>?show=upload_files_block&toggle=upload_block_unlinker&hide=upload_block_linker" class="show_hide_link fake_button">Upload Files</a>
 </p>
 <p id="unlinker" class="upload_block_unlinker" style="display:none; text-align: right;">
   <a href="<%= url_for(:controller => controller_name, :action => action_name) %>" class="fake_button">Cancel</a>
@@ -123,8 +129,17 @@
   <h4>Upload Files<hr /></h4>
 
   <p>
-    <%= link_to_unless params[:std] == '1', "One at a time", url_for(:controller => controller_name, :action => action_name, :std => 1), :class => 'fake_button' %>
-    <%= link_to_if params[:std] == '1', "Several at once", url_for(:controller => controller_name, :action => action_name, :std => 0), :class => 'fake_button' %>
+    <%= link_to_unless params[:std] == '1', "One at a time", file_attachments_path(:std => 1), :class => 'fake_button' %>
+    <%= link_to_if params[:std] == '1', "Several at once", file_attachments_path(:std => 0), :class => 'fake_button' %>
+  </p>
+
+  <p>    
+    <%= render({
+      :partial => 'file_container_select',
+      :locals => {
+        :selected => "#{params[:attachable_type]}_#{params[:attachable_id]}"
+      }
+    }) %>
   </p>
 
   <% if params[:std] && params[:std] == '1' %>

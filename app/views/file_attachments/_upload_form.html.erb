@@ -5,10 +5,14 @@
 <% end %>
 <% semantic_form_for new_file_attachment, :html => { :multipart => true } do |f| %>
 
-  <%= f.error_messages %>
+  <%= 
+  # todo replace f.error_messages
+  #f.error_messages
+  %>
 
   <% f.inputs do %>
-    <%= f.input :event_id, :as => :hidden %>
+    <%= f.input :attachable_id, :as => :hidden %>
+    <%= f.input :attachable_type, :as => :hidden %>
     <%= f.input :name, :label => 'Name' %>
     <%= f.input :description, :label => 'Description' %>
     <%= f.input :uploaded_file, :as => :file, :label => 'Filepath' %>
