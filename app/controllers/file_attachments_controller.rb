@@ -1,7 +1,5 @@
 class FileAttachmentsController < FileShare::ApplicationController
   
-  layout 'file-share'
-  
   # before_filter :load_and_authorize_current_user, :except => [:index, :show, :download]
   
   rescue_from Errno::ENOENT, :with => :file_not_found

@@ -6,10 +6,6 @@
   <title>FileShare</title>
   <%= stylesheet_link_tag "blueprint/screen", :media => "screen, projection" %>
   <%= stylesheet_link_tag "blueprint/print", :media => "print" %>
-  <%= stylesheet_link_tag "blueprint/grid", :media => "screen, projection" %>
-  <%= stylesheet_link_tag "blueprint/plugins/fancy-type/screen" %>
-  <%= stylesheet_link_tag "blueprint/plugins/silksprite/sprite", :media => "screen, projection" %>
-  <%= stylesheet_link_tag "fullcalendar.css", :media => "screen, projection" %>
   
   <!--[if lt IE 8]>
     <%= stylesheet_link_tag "blueprint/ie", :media => "screen, projection" %>
@@ -17,20 +13,8 @@
   <%= stylesheet_link_tag "tablesorter/blue/style", :media => "screen" %>
   <%= stylesheet_link_tag "smoothness/jquery-ui-1.7.2.custom.css" %>
   
-  <% if Rails.env == "production" %>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-  <% else %>
-    <%= javascript_include_tag 'jquery-1.4.2.min.js' %>
-  <% end %>
-  <%= javascript_include_tag 'jquery.tablesorter.min.js', 'jquery-ui-1.7.2.custom.min.js', 'jquery.string.1.0-min.js', 'jquery.clonePosition.js',
-        'lowpro.jquery.js', 'jquery.qtip-1.0.0-rc3.js', 'rails.js', 'behaviors.js', 'application.js' %>
-
-  <%= stylesheet_link_tag "formtastic" %>
-  <%= stylesheet_link_tag "formtastic_changes" %>
-
-  <%= stylesheet_link_tag 'error_messages' %>
-  <%= stylesheet_link_tag 'text_and_colors' %>
-  <%= stylesheet_link_tag 'application' %>
+  <%= stylesheet_link_tag file_share_stylesheet_includes %>
+  <%= javascript_include_tag file_share_javascript_includes %>
   
   <%= csrf_meta_tag %>
   

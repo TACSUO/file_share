@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jason LaPier", "Jeremiah Heller"]
-  s.date = %q{2010-10-28}
+  s.date = %q{2010-11-02}
   s.description = %q{Simple versioned event management for Rails 3.}
   s.email = ["jason.lapier@gmail.com", "jeremiah@inertialbit.net"]
   s.extra_rdoc_files = [
@@ -21,22 +21,28 @@ Gem::Specification.new do |s|
      "README",
      "Rakefile",
      "VERSION",
+     "app/controllers/application_controller.rb",
      "app/controllers/file_attachments_controller.rb",
      "app/controllers/file_share/application_controller.rb",
-     "app/helpers/application_helper.rb",
      "app/helpers/file_attachments_helper.rb",
+     "app/helpers/file_share/application_helper.rb",
      "app/models/file_attachment.rb",
      "app/models/file_container.rb",
+     "app/views/file-share-shared/_flash.html.erb",
+     "app/views/file-share-shared/_main_menu.html.erb",
+     "app/views/file-share-shared/_navigation.html.erb",
      "app/views/file_attachments/_file_attachment.html.erb",
      "app/views/file_attachments/_file_attachments.html.erb",
+     "app/views/file_attachments/_file_container_option.html.erb",
+     "app/views/file_attachments/_file_container_select.html.erb",
      "app/views/file_attachments/_plupload_with_listing.html.erb",
      "app/views/file_attachments/_upload_form.html.erb",
      "app/views/file_attachments/edit.html.erb",
      "app/views/file_attachments/index.html.erb",
      "app/views/file_attachments/update.js.rjs",
      "app/views/layouts/application.html.erb",
-     "app/views/shared/_flash.html.erb",
      "config/application.rb",
+     "config/blueprint_settings.yml",
      "config/boot.rb",
      "config/cucumber.yml",
      "config/database.example.yml",
@@ -62,13 +68,17 @@ Gem::Specification.new do |s|
      "lib/generators/file_share/install/USAGE",
      "lib/generators/file_share/install/install_generator.rb",
      "lib/generators/file_share/install/templates/file_share.rake",
+     "lib/tasks/blueprint.rake",
      "lib/tasks/cucumber.rake",
      "public/404.html",
      "public/422.html",
      "public/500.html",
      "public/favicon.ico",
-     "public/files/files.save/files.save/files.save/files.save/somefile-1.txt",
-     "public/files/files.save/somefile.txt",
+     "public/files/files.save/IMG_2465.JPG",
+     "public/files/files.save/IMG_2492.JPG",
+     "public/files/files.save/files.save/files.save/files.save/files.save/files.save/files.save/somefile-1.txt",
+     "public/files/files.save/files.save/files.save/files.save/somefile.txt",
+     "public/files/files.save/somefile-1.txt",
      "public/files/somefile.txt",
      "public/images/rails.png",
      "public/javascripts/application.js",
@@ -101,6 +111,17 @@ Gem::Specification.new do |s|
      "public/robots.txt",
      "public/stylesheets/application.css",
      "public/stylesheets/blueprint/grid.css",
+     "public/stylesheets/blueprint/icons/cross.png",
+     "public/stylesheets/blueprint/icons/doc.png",
+     "public/stylesheets/blueprint/icons/email.png",
+     "public/stylesheets/blueprint/icons/external.png",
+     "public/stylesheets/blueprint/icons/feed.png",
+     "public/stylesheets/blueprint/icons/im.png",
+     "public/stylesheets/blueprint/icons/key.png",
+     "public/stylesheets/blueprint/icons/pdf.png",
+     "public/stylesheets/blueprint/icons/tick.png",
+     "public/stylesheets/blueprint/icons/visited.png",
+     "public/stylesheets/blueprint/icons/xls.png",
      "public/stylesheets/blueprint/ie.css",
      "public/stylesheets/blueprint/oldgrid.css",
      "public/stylesheets/blueprint/plugins/buttons/icons/cross.png",
@@ -125,11 +146,11 @@ Gem::Specification.new do |s|
      "public/stylesheets/blueprint/plugins/silksprite/sprite.css",
      "public/stylesheets/blueprint/plugins/silksprite/sprites.png",
      "public/stylesheets/blueprint/print.css",
+     "public/stylesheets/blueprint/readme.txt",
      "public/stylesheets/blueprint/screen.css",
      "public/stylesheets/error_messages.css",
      "public/stylesheets/formtastic.css",
      "public/stylesheets/formtastic_changes.css",
-     "public/stylesheets/fullcalendar.css",
      "public/stylesheets/main_elements.css",
      "public/stylesheets/reset.css",
      "public/stylesheets/scaffold.css",
@@ -157,6 +178,7 @@ Gem::Specification.new do |s|
      "spec/fixtures/somefile.txt",
      "spec/helpers/file_attachments_helper_spec.rb",
      "spec/models/file_attachment_spec.rb",
+     "spec/models/file_container_spec.rb",
      "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/inertialbit/file_share}
@@ -168,6 +190,7 @@ Gem::Specification.new do |s|
     "spec/controllers/file_attachments_controller_spec.rb",
      "spec/helpers/file_attachments_helper_spec.rb",
      "spec/models/file_attachment_spec.rb",
+     "spec/models/file_container_spec.rb",
      "spec/spec_helper.rb"
   ]
 
@@ -179,6 +202,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<rails>, ["= 3.0.1"])
       s.add_runtime_dependency(%q<sqlite3-ruby>, [">= 0"])
       s.add_runtime_dependency(%q<formtastic>, [">= 0"])
+      s.add_development_dependency(%q<rcov>, [">= 0"])
       s.add_development_dependency(%q<rspec-rails>, [">= 0"])
       s.add_development_dependency(%q<acts_as_fu>, [">= 0"])
       s.add_development_dependency(%q<cucumber-rails>, [">= 0"])
@@ -187,6 +211,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<rails>, ["= 3.0.1"])
       s.add_dependency(%q<sqlite3-ruby>, [">= 0"])
       s.add_dependency(%q<formtastic>, [">= 0"])
+      s.add_dependency(%q<rcov>, [">= 0"])
       s.add_dependency(%q<rspec-rails>, [">= 0"])
       s.add_dependency(%q<acts_as_fu>, [">= 0"])
       s.add_dependency(%q<cucumber-rails>, [">= 0"])
@@ -196,6 +221,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<rails>, ["= 3.0.1"])
     s.add_dependency(%q<sqlite3-ruby>, [">= 0"])
     s.add_dependency(%q<formtastic>, [">= 0"])
+    s.add_dependency(%q<rcov>, [">= 0"])
     s.add_dependency(%q<rspec-rails>, [">= 0"])
     s.add_dependency(%q<acts_as_fu>, [">= 0"])
     s.add_dependency(%q<cucumber-rails>, [">= 0"])

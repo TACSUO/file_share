@@ -1,0 +1,9 @@
+default:
+  path: public/stylesheets/blueprint
+  plugins:
+  - buttons
+  - fancy-type
+  - link-icons
+  - pagination
+  - tacs-base
+
