@@ -11,13 +11,17 @@ module FileShare
         end
       end
 
-      content_tag(tag, wrapper_options) do
-        link_to(link_text, path, link_options)
+      unless wrapper_options.delete(:no_wrapper)
+        return content_tag(tag, wrapper_options) do
+          link_to(link_text, path, link_options)
+        end
+      else
+        return link_to(link_text, path, link_options)
       end
     end
   
-    def link_to_file_attachments
-      link_wrapper(file_attachments_path, {}, {
+    def link_to_file_attachments(wrapper_options={})
+      link_wrapper(file_attachments_path, wrapper_options, {
         :link_text => 'List / Upload Files'
       })
     end
