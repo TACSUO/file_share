@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jason LaPier", "Jeremiah Heller"]
-  s.date = %q{2010-11-02}
+  s.date = %q{2010-11-04}
   s.description = %q{Simple versioned event management for Rails 3.}
   s.email = ["jason.lapier@gmail.com", "jeremiah@inertialbit.net"]
   s.extra_rdoc_files = [
@@ -46,7 +46,6 @@ Gem::Specification.new do |s|
      "config/boot.rb",
      "config/cucumber.yml",
      "config/database.example.yml",
-     "config/database.yml",
      "config/environment.rb",
      "config/environments/development.rb",
      "config/environments/production.rb",
@@ -74,12 +73,6 @@ Gem::Specification.new do |s|
      "public/422.html",
      "public/500.html",
      "public/favicon.ico",
-     "public/files/files.save/IMG_2465.JPG",
-     "public/files/files.save/IMG_2492.JPG",
-     "public/files/files.save/files.save/files.save/files.save/files.save/files.save/files.save/somefile-1.txt",
-     "public/files/files.save/files.save/files.save/files.save/somefile.txt",
-     "public/files/files.save/somefile-1.txt",
-     "public/files/somefile.txt",
      "public/images/rails.png",
      "public/javascripts/application.js",
      "public/javascripts/behaviors.js",
@@ -174,7 +167,7 @@ Gem::Specification.new do |s|
      "public/stylesheets/tablesorter/blue/style.css",
      "public/stylesheets/text_and_colors.css",
      "spec/controllers/file_attachments_controller_spec.rb",
-     "spec/fixtures/file_attachments.yml",
+     "spec/fixtures/file_share_file_attachments.yml",
      "spec/fixtures/somefile.txt",
      "spec/helpers/file_attachments_helper_spec.rb",
      "spec/models/file_attachment_spec.rb",

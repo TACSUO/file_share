@@ -6,6 +6,8 @@ require 'rake'
 
 FileShare::Application.load_tasks
 
+excluded_files = %w(config/database.yml public/files)
+
 Engineer::Tasks.new do |gem|
   gem.name = "file_share"
   gem.summary = %Q{Provides basic file management features.}
@@ -19,7 +21,8 @@ Engineer::Tasks.new do |gem|
     "{app,config,lib,public,spec,test}/**/*",
     "db/**/*.rb"
   ]
-
+  excluded_files.each{|f| gem.files.exclude(f)}
+  
   # Include Bundler dependencies
   Bundler.definition.dependencies.each do |dependency|
     next if dependency.name == "engineer"
