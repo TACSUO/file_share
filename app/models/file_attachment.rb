@@ -6,6 +6,7 @@
 # t.datetime "updated_at"
 
 class FileAttachment < ActiveRecord::Base
+  set_table_name "file_share_file_attachments"
   
   FOLDER = 'files'
   FOLDER_ROOT = File.join(Rails.root.to_s, 'public')

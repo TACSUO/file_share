@@ -15,7 +15,7 @@ describe FileAttachmentsController do
       :filepath= => nil,
       :name => 'what',
       :attachable_id => mock_container.id,
-      :attachable_type => mock_container.type,
+      :attachable_type => mock_container.class,
       :attachable => mock_container,
       :save => true
     })

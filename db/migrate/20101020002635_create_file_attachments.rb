@@ -1,6 +1,6 @@
 class CreateFileAttachments < ActiveRecord::Migration
   def self.up
-    create_table :file_attachments do |t|
+    create_table :file_share_file_attachments do |t|
       t.string :name
       t.text :description
       t.string :filepath
@@ -10,10 +10,10 @@ class CreateFileAttachments < ActiveRecord::Migration
       t.timestamps
     end
     
-    add_index :file_attachments, :attachable_id
+    add_index :file_share_file_attachments, :attachable_id
   end
 
   def self.down
-    drop_table :file_attachments
+    drop_table :file_share_file_attachments
   end
 end

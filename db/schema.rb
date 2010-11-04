@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(:version => 20101020002635) do
 
-  create_table "file_attachments", :force => true do |t|
+  create_table "file_share_file_attachments", :force => true do |t|
     t.string   "name"
     t.text     "description"
     t.string   "filepath"
@@ -22,6 +22,6 @@ ActiveRecord::Schema.define(:version => 20101020002635) do
     t.datetime "updated_at"
   end
 
-  add_index "file_attachments", ["attachable_id"], :name => "index_file_attachments_on_attachable_id"
+  add_index "file_share_file_attachments", ["attachable_id"], :name => "index_file_share_file_attachments_on_attachable_id"
 
 end
