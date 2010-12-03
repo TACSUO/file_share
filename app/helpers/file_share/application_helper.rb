@@ -33,16 +33,6 @@ module FileShare
     def render_file_share_navigation
       render :partial => 'file-share-shared/navigation'
     end
-    
-    def file_share_stylesheet_includes
-      [
-        "formtastic",
-        "formtastic_changes",
-        "error_messages",
-        "text_and_colors",
-        "application"
-      ]
-    end
     def file_share_javascript_includes
       list = [
         "jquery-ui-1.7.2.custom.min.js",
@@ -51,12 +41,16 @@ module FileShare
         "jquery.clonePosition.js",
         "lowpro.jquery.js",
         "jquery.qtip-1.0.0-rc3.js",
-        "rails.js",
-        "behaviors.js",
-        "application.js"
+        "rails",
+        "file_share_behaviors",
+        "file_share",
+        "http://www.google.com/jsapi",
+        "plupload/gears_init",
+        "plupload/plupload.full.min.js",
+        "plupload/jquery.plupload.queue.min.js"
       ]
       unless Rails.env == 'production'
-        list.unshift("jquery-1.4.2.min.js")
+        list.unshift("jquery")
       else
         list.unshift("http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js")
       end

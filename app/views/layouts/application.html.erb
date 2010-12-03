@@ -5,15 +5,17 @@
   <!-- <link rel="icon" type="image/png" href="/images/favorite.png"/> -->
   <title>FileShare</title>
   <%= stylesheet_link_tag "blueprint/screen", :media => "screen, projection" %>
+  <%= stylesheet_link_tag "plupload/screen", :media => "screen, projection" %>
   <%= stylesheet_link_tag "blueprint/print", :media => "print" %>
-  
   <!--[if lt IE 8]>
     <%= stylesheet_link_tag "blueprint/ie", :media => "screen, projection" %>
   <![endif]-->
   <%= stylesheet_link_tag "tablesorter/blue/style", :media => "screen" %>
   <%= stylesheet_link_tag "smoothness/jquery-ui-1.7.2.custom.css" %>
   
-  <%= stylesheet_link_tag file_share_stylesheet_includes %>
+  <%= stylesheet_link_tag 'error_messages', 'formtastic', 'formtastic_changes',
+                          'main_elements', 'text_and_colors' %>
+
   <%= javascript_include_tag file_share_javascript_includes %>
   
   <%= csrf_meta_tag %>

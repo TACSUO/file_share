@@ -18,13 +18,8 @@ module FileShare
       end
     end
 
-    initializer "file_share.action_view.identifier_collection" do
-      require 'file_share/action_view'
-    end
-
-    initializer "file_share.asset_path" do
-      require 'file_share/asset_path'
-      setup_asset_path
+    initializer "file_share.asset_path" do |app|
+      app.config.middleware.use ::ActionDispatch::Static, "#{root}/public"
     end
   end
 end

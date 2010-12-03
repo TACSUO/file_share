@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jason LaPier", "Jeremiah Heller"]
-  s.date = %q{2010-12-02}
+  s.date = %q{2010-12-03}
   s.description = %q{Simple versioned event management for Rails 3.}
   s.email = ["jason.lapier@gmail.com", "jeremiah@inertialbit.net"]
   s.extra_rdoc_files = [
@@ -61,8 +61,6 @@ Gem::Specification.new do |s|
     "db/schema.rb",
     "db/seeds.rb",
     "lib/file_share.rb",
-    "lib/file_share/action_view.rb",
-    "lib/file_share/asset_path.rb",
     "lib/file_share/engine.rb",
     "lib/generators/file_share/install/USAGE",
     "lib/generators/file_share/install/install_generator.rb",
@@ -74,15 +72,13 @@ Gem::Specification.new do |s|
     "public/500.html",
     "public/favicon.ico",
     "public/images/rails.png",
-    "public/javascripts/application.js",
-    "public/javascripts/behaviors.js",
-    "public/javascripts/fullcalendar.js",
-    "public/javascripts/fullcalendar.min.js",
+    "public/javascripts/file_share.js",
+    "public/javascripts/file_share_behaviors.js",
     "public/javascripts/idselector.js",
     "public/javascripts/jquery-1.3.2.min.js",
-    "public/javascripts/jquery-1.4.2.min.js",
     "public/javascripts/jquery-ui-1.7.2.custom.min.js",
     "public/javascripts/jquery.clonePosition.js",
+    "public/javascripts/jquery.js",
     "public/javascripts/jquery.qtip-1.0.0-rc3.js",
     "public/javascripts/jquery.qtip-1.0.0-rc3.min.js",
     "public/javascripts/jquery.string.1.0-min.js",
@@ -102,7 +98,6 @@ Gem::Specification.new do |s|
     "public/javascripts/plupload/plupload.silverlight.xap",
     "public/javascripts/rails.js",
     "public/robots.txt",
-    "public/stylesheets/application.css",
     "public/stylesheets/blueprint/grid.css",
     "public/stylesheets/blueprint/icons/cross.png",
     "public/stylesheets/blueprint/icons/doc.png",
@@ -145,6 +140,14 @@ Gem::Specification.new do |s|
     "public/stylesheets/formtastic.css",
     "public/stylesheets/formtastic_changes.css",
     "public/stylesheets/main_elements.css",
+    "public/stylesheets/plupload/backgrounds.gif",
+    "public/stylesheets/plupload/buttons-disabled.png",
+    "public/stylesheets/plupload/buttons.png",
+    "public/stylesheets/plupload/delete.gif",
+    "public/stylesheets/plupload/done.gif",
+    "public/stylesheets/plupload/error.gif",
+    "public/stylesheets/plupload/screen.css",
+    "public/stylesheets/plupload/transp50.png",
     "public/stylesheets/reset.css",
     "public/stylesheets/scaffold.css",
     "public/stylesheets/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png",
