@@ -1,17 +1,21 @@
 <%= div_for(file_attachment) do %>
   <%= description_display(file_attachment) %>
   <%= content_tag :p do %>
-    <%= link_to(file_attachment.name, download_file_attachment_path(file_attachment.id)) %> <%= "(#{link_to(file_attachment.attachable.name, polymorphic_path(file_attachment.attachable))})".html_safe if file_attachment.attachable %>
+    <%= link_to(file_attachment.name, download_file_attachment_path(file_attachment.id)) %>
+    <% if FileContainer.types.present? && 
+      file_attachment.attachable.present? %>
+    <%= "(#{link_to(file_attachment.attachable.name, polymorphic_path(file_attachment.attachable))})".html_safe %>
+    <% end %>
   <% end %>
   
   <%= content_tag :p, :style => "font-size: 11px;" do %>
     <a href="#" file_attachment_id="<%= file_attachment.id %>" file_attachment[description]="<%= file_attachment.description %>" class="file_attachment_dynamic_form_link fake_button">update description</a>
-    <%= link_to('update', edit_file_attachment_path(file_attachment.id), :class => 'fake_button') if has_authorization?(:update, :file_attachments) %>
+    <%= link_to('update', edit_file_attachment_path(file_attachment.id), :class => 'fake_button') if has_authorization?(:update, file_attachment) %>
     <%= link_to('delete', file_attachment_path(file_attachment.id), {
           :method => :delete,
           :confirm => "Did you mean to Delete #{file_attachment.name}?",
           :class => 'fake_button'
-        }) if has_authorization?(:delete, :file_attachments) %>
-  <% end if has_authorization?(:update, :file_attachments) || has_authorization?(:delete, :file_attachments) %>
+        }) if has_authorization?(:delete, file_attachment) %>
+  <% end if has_authorization?(:update, file_attachment) || has_authorization?(:delete, file_attachment) %>
 <% end %>  
 <hr />

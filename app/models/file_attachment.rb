@@ -88,7 +88,7 @@ class FileAttachment < ActiveRecord::Base
     end
     def file_container=(container)
       p = container.split("_")
-      self.attachable_type = p[0]
-      self.attachable_id = p[1]
+      self.attachable_type = p[0] unless p[0].blank?
+      self.attachable_id = p[1] unless p[1].blank?
     end
 end

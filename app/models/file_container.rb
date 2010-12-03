@@ -10,6 +10,12 @@ module FileContainer
       include Associations
     end
   end
+  
+  def self.all
+    types.collect do |type|
+      type.all
+    end.flatten! || []
+  end
 
   module Associations
     def self.included(base)

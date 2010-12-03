@@ -36,9 +36,7 @@ class FileAttachmentsController < FileShare::ApplicationController
       true
     end
     def load_containers
-      @file_containers = FileContainer.types.collect do |type|
-        type.all
-      end.flatten! || []
+      @file_containers = FileContainer.all
     end
   protected
   public

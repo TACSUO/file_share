@@ -1,10 +1,4 @@
 <% content_for(:javascript) do %>
-  <style  type="text/css">@import url(http://www.plupload.com/css/plupload.queue.css);</style>
-  <script type="text/javascript"  src="http://www.google.com/jsapi"></script>
-  <%= javascript_include_tag 'plupload/gears_init.js' %>
-  <%= javascript_include_tag 'plupload/plupload.full.min.js' %>
-  <%= javascript_include_tag 'plupload/jquery.plupload.queue.min.js' %>
-
   <script type="text/javascript">
   jQuery.ajaxSetup({
     'beforeSend': function(xhr) {
@@ -133,14 +127,21 @@
     <%= link_to_if params[:std] == '1', "Several at once", file_attachments_path(:std => 0), :class => 'fake_button' %>
   </p>
 
+  <% if @file_containers.present? %>
   <p>    
     <%= render({
-      :partial => 'file_container_select',
+      :partial => 'file_attachments/file_container_select',
       :locals => {
         :selected => "#{params[:attachable_type]}_#{params[:attachable_id]}"
       }
     }) %>
   </p>
+  <% elsif instance_variable_defined?("@#{controller_name.singularize}") %>
+  <% instance = instance_variable_get("@#{controller_name.singularize}") %>
+  <%= hidden_field_tag 'file_attachment[file_container]', "#{instance.class}_#{instance.id}", {
+    :id => 'file_container_select'
+  } %>
+  <% end %>
 
   <% if params[:std] && params[:std] == '1' %>
   <div id="single_upload" style="width: 33%;">
