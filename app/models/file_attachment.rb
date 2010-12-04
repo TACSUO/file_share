@@ -22,6 +22,7 @@ class FileAttachment < ActiveRecord::Base
   #before_validation_on_create :save_to_folder_path
   before_validation :autofill_blank_name, :on => :create
   before_validation :save_to_folder_path, :on => :create
+  before_save :normalize_attachable_fields
   # before_validation_on_update :autofill_blank_name, :if => :file_uploaded?
   # before_validation_on_update :save_to_folder_path, :if => :file_uploaded?
   before_destroy :move_file_to_trash_folder!
@@ -29,6 +30,12 @@ class FileAttachment < ActiveRecord::Base
   attr_accessor :uploaded_file
   
   private
+    def normalize_attachable_fields
+      if attachable_type.blank? || attachable_id.blank?
+        self.attachable_type = nil
+        self.attachable_id = nil
+      end
+    end
     def move_file_to_trash_folder!
       ensure_folder_path_exists(TRASH_FOLDER)
       trash_filename = generate_unique_filename(TRASH_FOLDER)

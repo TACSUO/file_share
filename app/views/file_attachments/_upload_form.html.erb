@@ -1,5 +1,5 @@
-<% if defined?(event) && event %>
-  <% new_file_attachment = FileAttachment.new(:event => event) %>
+<% if defined?(container) && container %>
+  <% new_file_attachment = FileAttachment.new(:attachable => container) %>
 <% else %>
   <% new_file_attachment = FileAttachment.new %>
 <% end %>

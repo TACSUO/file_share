@@ -130,8 +130,8 @@
   <h4>Upload Files<hr /></h4>
 
   <p>
-    <%= link_to_unless params[:std] == '1', "One at a time", file_attachments_path(:std => 1), :class => 'fake_button' %>
-    <%= link_to_if params[:std] == '1', "Several at once", file_attachments_path(:std => 0), :class => 'fake_button' %>
+    <%= link_to_unless params[:std] == '1', "One at a time", url_for(:controller => controller_name, :action => action_name, :std => 1), :class => 'fake_button' %>
+    <%= link_to_if params[:std] == '1', "Several at once", url_for(:controller => controller_name, :action => action_name, :std => 0), :class => 'fake_button' %>
   </p>
 
   <% if @file_containers.present? %>
@@ -152,8 +152,8 @@
 
   <% if params[:std] && params[:std] == '1' %>
   <div id="single_upload" style="width: 33%;">
-    <%= render :partial => 'file_attachments/upload_form', :locals => {:event => event} if defined?(event) %>
-    <%= render :partial => 'file_attachments/upload_form' unless defined?(event) %>
+    <%= render :partial => 'file_attachments/upload_form', :locals => {:container => instance} if defined?(instance) %>
+    <%= render :partial => 'file_attachments/upload_form' unless defined?(instance) %>
   </div>
   <% elsif params[:std].nil? || params[:std] == '0' %>
   <div id="multiple_uploads">
