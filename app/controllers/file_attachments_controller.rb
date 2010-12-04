@@ -40,7 +40,10 @@ class FileAttachmentsController < FileShare::ApplicationController
     end
   protected
   public
-
+    def new
+    end
+    def show
+    end
     def index
       @file_attachments = FileAttachment.all
       load_containers
