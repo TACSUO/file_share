@@ -77,6 +77,8 @@
     <%= render :partial => 'file_attachments/file_attachment', :collection => file_attachments %>
   </div>
 
+<% if has_authorization?(:update, file_attachments) %>
+
   <div id="blank_description_form" style="display: none; padding: 5px 0;">
     <form class="formtastic file_attachment" id="new_description" method="post" action="#">
       <div style="margin: 0pt; padding: 0pt; display: inline;">
@@ -112,6 +114,11 @@
   <% end %>
 
 <% end %>
+
+<% end %>
+
+<% if has_authorization?(:create, FileAttachment.new) %>
+
 <p id="linker" class="upload_block_linker" style="display:none; text-align: right;">
   <a href="<%= url_for(:controller => controller_name, :action => action_name) %>?show=upload_files_block&toggle=upload_block_unlinker&hide=upload_block_linker" class="show_hide_link fake_button">Upload Files</a>
 </p>
@@ -154,3 +161,5 @@
   </div>
   <% end %>
 </div>
+
+<% end %>
