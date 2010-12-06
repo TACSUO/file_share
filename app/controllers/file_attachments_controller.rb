@@ -45,13 +45,14 @@ class FileAttachmentsController < FileShare::ApplicationController
     def show
     end
     def index
-      @file_attachments = FileAttachment.all
+      @orphans = FileAttachment.orphans
+      @files   = FileAttachment.attached
       load_containers
     end
   
     def download
       file_attachment = FileAttachment.find(params[:id])
-      file_itself = File.open(file_attachment.full_path, 'r')
+      file_itself     = File.open(file_attachment.full_path, 'r')
       logger.debug("FILE ATTACHMENT INFO: #{file_attachment.inspect}")
       logger.debug("FILE INFO: #{file_itself.inspect}")
       send_data(file_itself.read, :filename => File.basename(file_itself.path), :stream => true, :buffer_size => 1.megabyte)
@@ -64,7 +65,7 @@ class FileAttachmentsController < FileShare::ApplicationController
         }
         if params[:attachable_id] && params[:attachable_type]
           file_params.merge!({
-            :attachable_id => params[:attachable_id],
+            :attachable_id   => params[:attachable_id],
             :attachable_type => params[:attachable_type]
           })
         end
@@ -85,6 +86,7 @@ class FileAttachmentsController < FileShare::ApplicationController
       unless params[:file] # request.xhr? # html5 based multiple uploads are not xhr ?
         redirect_to_index_or_attachable(:std => 1) # {:std => 1} - make sure the std html form displays
       else
+        flash.discard
         render :partial => 'file_attachments/file_attachment', :object => @file_attachment
       end
     end
@@ -95,7 +97,7 @@ class FileAttachmentsController < FileShare::ApplicationController
     end
     
     def update
-      @file_attachment = FileAttachment.find(params[:id])
+        @file_attachment = FileAttachment.find(params[:id])
       respond_to do |format|
         if @file_attachment.update_attributes(params[:file_attachment])
           format.html do

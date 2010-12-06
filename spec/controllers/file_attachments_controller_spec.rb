@@ -280,11 +280,16 @@ describe FileAttachmentsController do
       FileAttachment.stub(:all).and_return([mock_file_attachment])
       mock_container.class.stub(:all).and_return([mock_container])
     end
-    it "loads file attachments as @file_attachments" do
-      FileAttachment.should_receive(:all).and_return([mock_file_attachment])
+    it "loads orphaned file attachments as @orphans" do
+      FileAttachment.should_receive(:orphans).and_return([mock_file_attachment])
       get :index
-      assigns[:file_attachments].should eql [mock_file_attachment]
-    end    
+      assigns[:orphans].should eql [mock_file_attachment]
+    end
+    it "loads attached file attachments as @files" do
+      FileAttachment.should_receive(:attached).and_return([mock_file_attachment])
+      get :index
+      assigns[:files].should eql [mock_file_attachment]
+    end
     it "loads potential containers as @file_containers" do
       FileContainer.stub(:types).and_return([mock_container.class])
       mock_container.class.should_receive(:all).and_return([mock_container])

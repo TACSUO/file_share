@@ -7,7 +7,17 @@
   });
   function bindCallbacks(plupload) {
     plupload.bind('FileUploaded', function(up, file, response) {
-  	  $("#file_attachments").append(response.response);
+      if( $('#file_container_select').val() ) {
+        $("#" + $('#file_container_select').val() ).append(response.response);
+      } else {
+        $("#orphans").append(response.response);
+      }
+  	});
+  	plupload.bind('UploadProgress', function() {
+      if( plupload.files.length == plupload.total.failed + plupload.total.uploaded ) {
+        $('span.plupload_upload_status').hide();
+        $('div.plupload_buttons').show();
+      }
   	});
   	plupload.bind('UploadFile', function(up, file) {
   	  attachable_params = $('#file_container_select').val().split('_');
@@ -71,51 +81,7 @@
 
 <h3>Downloadable Resources<hr /></h3>
 
-<% if defined?(file_attachments) %>
-
-  <div id="file_attachments">
-    <%= render :partial => 'file_attachments/file_attachment', :collection => file_attachments %>
-  </div>
-
-<% if has_authorization?(:update, file_attachments) %>
-
-  <div id="blank_description_form" style="display: none; padding: 5px 0;">
-    <form class="formtastic file_attachment" id="new_description" method="post" action="#">
-      <div style="margin: 0pt; padding: 0pt; display: inline;">
-        <input type="hidden" value="put" name="_method" />
-        <input type="hidden" value="<%= form_authenticity_token %>" name="authenticity_token" />
-      </div>
-      <textarea id="file_attachment_description" style="height: 70px; width: 69%" name="file_attachment[description]"></textarea>
-      <br />
-      <input type="submit" value="Update" />
-    </form>
-  </div>
-
-  <% content_for(:javascript) do %>
-  <script type="text/javascript">
-  jQuery.ajaxSetup({
-    'beforeSend': function(xhr) {
-      xhr.setRequestHeader("Accept", "text/javascript");
-    }
-  });
-
-  jQuery(function($) {
-    $("a.file_attachment_dynamic_form_link").attach(DynamicForm, {
-      formId: 'new_description',
-      formContainer: 'blank_description_form',
-      actionPrefix: '/file_attachments',
-      targetIdName: 'file_attachment_id',
-      targetContentName: 'file_attachment[description]',
-      targetContentType: 'textarea'
-    });
-    $("#new_description").attach(Remote.Form);
-  });
-  </script>
-  <% end %>
-
-<% end %>
-
-<% end %>
+<%= render :partial => 'file_attachments/file_attachments' %>
 
 <% if has_authorization?(:create, FileAttachment.new) %>
 
@@ -123,7 +89,14 @@
   <a href="<%= url_for(:controller => controller_name, :action => action_name) %>?show=upload_files_block&toggle=upload_block_unlinker&hide=upload_block_linker" class="show_hide_link fake_button">Upload Files</a>
 </p>
 <p id="unlinker" class="upload_block_unlinker" style="display:none; text-align: right;">
-  <a href="<%= url_for(:controller => controller_name, :action => action_name) %>" class="fake_button">Cancel</a>
+  <%= link_to "Cancel", url_for({
+    :controller => controller_name,
+    :action => action_name,
+    # show=upload_files_block&toggle=upload_block_unlinker&hide=upload_block_linker
+    :show => 'upload_block_linker',
+    :toggle => 'upload_block_unlinker',
+    :hide => 'upload_files_block'    
+  }), :class => 'show_hide_link fake_button' %>
 </p>
 
 <div id="file_block" class="upload_files_block" style="">
@@ -146,6 +119,10 @@
   <% elsif instance_variable_defined?("@#{controller_name.singularize}") %>
   <% instance = instance_variable_get("@#{controller_name.singularize}") %>
   <%= hidden_field_tag 'file_attachment[file_container]', "#{instance.class}_#{instance.id}", {
+    :id => 'file_container_select'
+  } %>
+  <% else %>
+  <%= hidden_field_tag 'file_attachment[file_container]', nil, {
     :id => 'file_container_select'
   } %>
   <% end %>

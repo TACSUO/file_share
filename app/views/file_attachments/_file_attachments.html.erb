@@ -1,7 +1,21 @@
 <div id="file_attachments">
-  <%= render :partial => 'file_attachments/file_attachment', :collection => file_attachments %>
+  <div id="orphans" class="span-8">
+    <h2>Orphaned Files (<em><%= @orphans.count %></em>)</h2>
+    <%= render :partial => 'file_attachments/file_attachment', :collection => @orphans %>
+  </div>
+  <div id="files" class="span-8 last">
+    <h2>Files (<em><%= @files.count %></em>)</h2>
+    <% @files.group_by(&:attachable).each do |attachable, attached_files| %>
+    <div id="<%= "#{attachable.class}_#{attachable.id}" %>">
+    <h3><%= link_to attachable.name, polymorphic_path(attachable) %> (<em><%= attached_files.count %></em>)</h3>
+    <%= render :partial => 'file_attachments/file_attachment', :collection => attached_files %>
+    </div>
+    <% end %>
+  </div>
+  <div style="clear:both;"></div>
 </div>
 
+<% if has_authorization?(:update, FileAttachment.new) %>
 <div id="blank_description_form" style="display: none; padding: 5px 0;">
   <form class="formtastic file_attachment" id="new_description" method="post" action="#">
     <div style="margin: 0pt; padding: 0pt; display: inline;">
@@ -34,4 +48,5 @@ jQuery(function($) {
   $("#new_description").attach(Remote.Form);
 });
 </script>
+<% end %>
 <% end %>

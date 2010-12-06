@@ -2,10 +2,6 @@
   <%= description_display(file_attachment) %>
   <%= content_tag :p do %>
     <%= link_to(file_attachment.name, download_file_attachment_path(file_attachment.id)) %>
-    <% if FileContainer.types.present? && 
-      file_attachment.attachable.present? %>
-    <%= "(#{link_to(file_attachment.attachable.name, polymorphic_path(file_attachment.attachable))})".html_safe %>
-    <% end %>
   <% end %>
   
   <%= content_tag :p, :style => "font-size: 11px;" do %>

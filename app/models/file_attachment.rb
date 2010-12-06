@@ -29,6 +29,9 @@ class FileAttachment < ActiveRecord::Base
 
   attr_accessor :uploaded_file
   
+  scope :orphans, where('attachable_id IS NULL')
+  scope :attached, where('attachable_id IS NOT NULL')
+  
   private
     def normalize_attachable_fields
       if attachable_type.blank? || attachable_id.blank?
