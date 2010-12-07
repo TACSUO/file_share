@@ -1,3 +1,5 @@
+<% orphans ||= [] %>
+<% files ||= [] %>
 <% content_for(:javascript) do %>
   <script type="text/javascript">
   jQuery.ajaxSetup({
@@ -7,11 +9,16 @@
   });
   function bindCallbacks(plupload) {
     plupload.bind('FileUploaded', function(up, file, response) {
-      if( $('#file_container_select').val() ) {
-        $("#" + $('#file_container_select').val() ).append(response.response);
-      } else {
-        $("#orphans").append(response.response);
+      var element_selector = '';
+      if( $('#file_container_select').val() &&
+        $("#"+$('#file_container_select').val())[0] ) {
+          element_selector = "#" + $('#file_container_select').val();
+      } else if( $("#orphans")[0] ) {
+        element_selector = "#orphans"
+      } else if( $("#files")[0] ) {
+        element_selector = "#files"
       }
+      $(element_selector).append(response.response);
   	});
   	plupload.bind('UploadProgress', function() {
       if( plupload.files.length == plupload.total.failed + plupload.total.uploaded ) {
@@ -79,9 +86,12 @@
   
 <% end %>
 
-<h3>Downloadable Resources<hr /></h3>
+<h2>Downloadable Resources</h2>
 
-<%= render :partial => 'file_attachments/file_attachments' %>
+<%= render :partial => 'file_attachments/file_attachments', :locals => {
+  :orphans => orphans,
+  :files => files
+} %>
 
 <% if has_authorization?(:create, FileAttachment.new) %>
 

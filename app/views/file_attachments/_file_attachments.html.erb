@@ -1,18 +1,26 @@
 <div id="file_attachments">
+  <% if orphans.present? && files.present? %>
   <div id="orphans" class="span-8">
-    <h2>Orphaned Files (<em><%= @orphans.count %></em>)</h2>
-    <%= render :partial => 'file_attachments/file_attachment', :collection => @orphans %>
+    <h2>Orphaned Files</h2>
+    <%= render :partial => 'file_attachments/file_attachment', :collection => orphans %>
   </div>
   <div id="files" class="span-8 last">
-    <h2>Files (<em><%= @files.count %></em>)</h2>
-    <% @files.group_by(&:attachable).each do |attachable, attached_files| %>
+    <h2>Attached Files</h2>
+    <% files.group_by(&:attachable).each do |attachable, attached_files| %>
     <div id="<%= "#{attachable.class}_#{attachable.id}" %>">
-    <h3><%= link_to attachable.name, polymorphic_path(attachable) %> (<em><%= attached_files.count %></em>)</h3>
+    <h3><%= link_to attachable.name, polymorphic_path(attachable) %></h3>
     <%= render :partial => 'file_attachments/file_attachment', :collection => attached_files %>
     </div>
     <% end %>
   </div>
   <div style="clear:both;"></div>
+  <% else %>
+  <div id="files">
+    <% if files.present? || orphans.present? %>
+    <%= render :partial => 'file_attachments/file_attachment', :collection => files.present? ? files : orphans %>
+    <% end %>
+  </div>
+  <% end %>
 </div>
 
 <% if has_authorization?(:update, FileAttachment.new) %>
