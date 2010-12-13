@@ -3,3 +3,7 @@
 
 en:
   hello: "Hello world"
+  formtastic:
+    actions:
+      create: "Save"
+      update: "Update"

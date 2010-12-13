@@ -27,6 +27,8 @@
       %>
       <%= form.input :description, :hint => "of file contents, purpose, etc" %>
     <% end %>
-    <%= form.buttons %>
+    <%= form.buttons do %>
+      <%= form.commit_button%>
+    <% end %>
   <% end %>
 <% end %>

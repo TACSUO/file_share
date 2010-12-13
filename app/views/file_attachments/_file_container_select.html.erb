@@ -1,4 +1,3 @@
-<select id="file_container_select" name="file_attachment[file_container]">
   <option value=""></option>
   <% @file_containers.group_by(&:class).each do |klass, file_containers| %>
     <optgroup label="<%= klass.to_s.pluralize %>">
@@ -11,4 +10,3 @@
       }) %>
     </optgroup>
   <% end %>
-</select>

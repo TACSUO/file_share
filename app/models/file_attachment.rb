@@ -83,12 +83,6 @@ class FileAttachment < ActiveRecord::Base
     end
   protected
   public
-    def containers
-      return [] if attachables.count == 0
-      attachables.all.collect do |attachable|
-        attachable.container
-      end
-    end
     def full_path
       "#{FOLDER_ROOT}/#{filepath}"
     end
@@ -96,9 +90,13 @@ class FileAttachment < ActiveRecord::Base
       return true if File.exists?(full_path) && File.basename(full_path) != FOLDER
       return false
     end
+    def file_container
+      return nil unless attachable_type.present? && attachable_id.present?
+      "#{attachable_type}_#{attachable_id}"
+    end
     def file_container=(container)
       p = container.split("_")
-      self.attachable_type = p[0] unless p[0].blank?
-      self.attachable_id = p[1] unless p[1].blank?
+      self.attachable_type = p[0].blank? ? nil : p[0]
+      self.attachable_id = p[1].blank? ? nil : p[1]
     end
 end

@@ -97,7 +97,7 @@ class FileAttachmentsController < FileShare::ApplicationController
     end
     
     def update
-        @file_attachment = FileAttachment.find(params[:id])
+      @file_attachment = FileAttachment.find(params[:id])
       respond_to do |format|
         if @file_attachment.update_attributes(params[:file_attachment])
           format.html do

@@ -1,12 +1,11 @@
 <%= div_for(file_attachment) do %>
+  <span id="file_attachment_<%= file_attachment.id %>_file_container" class="file_attachment_file_container" style="display:none;"><%= file_attachment.file_container %></span>
   <%= description_display(file_attachment) %>
-  <%= content_tag :p do %>
-    <%= link_to(file_attachment.name, download_file_attachment_path(file_attachment.id)) %>
-  <% end %>
-  
+  <%= name_display(file_attachment) %>
   <%= content_tag :p, :style => "font-size: 11px;" do %>
-    <a href="#" file_attachment_id="<%= file_attachment.id %>" file_attachment[description]="<%= file_attachment.description %>" class="file_attachment_dynamic_form_link fake_button">update description</a>
-    <%= link_to('update', edit_file_attachment_path(file_attachment.id), :class => 'fake_button') if has_authorization?(:update, file_attachment) %>
+    <%= link_to "update", edit_file_attachment_path(file_attachment), {
+      :class => 'file_attachment_dynamic_form_link fake_button'
+    } %>
     <%= link_to('delete', file_attachment_path(file_attachment.id), {
           :method => :delete,
           :confirm => "Did you mean to Delete #{file_attachment.name}?",

@@ -118,13 +118,15 @@
   </p>
 
   <% if @file_containers.present? %>
-  <p>    
-    <%= render({
-      :partial => 'file_attachments/file_container_select',
-      :locals => {
-        :selected => "#{params[:attachable_type]}_#{params[:attachable_id]}"
-      }
-    }) %>
+  <p>
+    <select id="file_container_select" name="file_attachment[file_container]">
+      <%= render({
+        :partial => 'file_attachments/file_container_select',
+        :locals => {
+          :selected => "#{params[:attachable_type]}_#{params[:attachable_id]}"
+        }
+      }) %>
+    </select>
   </p>
   <% elsif instance_variable_defined?("@#{controller_name.singularize}") %>
   <% instance = instance_variable_get("@#{controller_name.singularize}") %>

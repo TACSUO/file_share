@@ -7,10 +7,10 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 gem "formtastic"
 
 group :development, :test do
+  gem "acts_as_fu"
+  gem "capybara"
+  gem "cucumber-rails"
   gem "engineer"
   gem "rcov"
   gem "rspec-rails"
-  gem "acts_as_fu"
-  gem "cucumber-rails"
-  gem "capybara"
 end
