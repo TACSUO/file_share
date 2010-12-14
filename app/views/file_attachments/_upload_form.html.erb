@@ -19,4 +19,4 @@
   <% end %>
 
   <%= f.buttons %>
-<% end %>
+<% end if has_authorization?(:create, FileAttachment.new) %>

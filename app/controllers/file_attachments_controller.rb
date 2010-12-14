@@ -3,8 +3,6 @@ class FileAttachmentsController < FileShare::ApplicationController
   # before_filter :load_and_authorize_current_user, :except => [:index, :show, :download]
   
   rescue_from Errno::ENOENT, :with => :file_not_found
-  
-  helper_method :has_authorization?
 
   private
     def file_not_found(e)
@@ -30,10 +28,6 @@ class FileAttachmentsController < FileShare::ApplicationController
         redirect_to(default)
       #end
       #session[:return_to] = nil
-    end
-    def has_authorization?(*args)
-      # stub
-      true
     end
     def load_containers
       @file_containers = FileContainer.all

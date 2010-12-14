@@ -24,7 +24,6 @@
 </div>
 
 <% if has_authorization?(:update, FileAttachment.new) %>
-<!-- <div id="blank_description_form" style="display: none; padding: 5px 0;"> -->
 <form id="file_attachment_dynamic_form" class="formtastic" method="post" action="<%= file_attachments_path %>" style="display: none; padding: 5px 0;">
   <div style="margin: 0pt; padding: 0pt; display: inline;">
     <input type="hidden" value="put" name="_method" />
@@ -45,7 +44,6 @@
   <br />
   <input type="submit" value="Update" /> | <a href="#" class="cancel_dynamic_form">Cancel</a>
 </form>
-<!-- </div> -->
 
 <% content_for(:javascript) do %>
 <script type="text/javascript">

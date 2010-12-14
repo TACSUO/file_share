@@ -1,5 +1,9 @@
 <%= div_for(file_attachment) do %>
-  <span id="file_attachment_<%= file_attachment.id %>_file_container" class="file_attachment_file_container" style="display:none;"><%= file_attachment.file_container %></span>
+  <%= content_tag :span, file_attachment.file_container, {
+    :id => "file_attachment_#{file_attachment.id}_file_container",
+    :class => "file_attachment_file_container",
+    :style => "display:none;"
+  } if has_authorization?(:update, file_attachment) %>
   <%= description_display(file_attachment) %>
   <%= name_display(file_attachment) %>
   <%= content_tag :p, :style => "font-size: 11px;" do %>
