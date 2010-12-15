@@ -167,6 +167,21 @@ describe FileAttachmentsController do
     
   end
   
+  describe ":show, :id => int" do
+    before(:each) do
+      FileAttachment.stub(:find).and_return(mock_file_attachment)
+    end
+    it "loads a @file_attachment" do
+      FileAttachment.should_receive(:find).with('1').and_return(mock_file_attachment)
+      get :show, :id => "1"
+      assigns[:file_attachment].should eql mock_file_attachment
+    end
+    it "renders the show template" do
+      get :show, :id => "1"
+      response.should render_template("file_attachments/show")
+    end
+  end
+  
   describe ":edit, :id => integer" do
     
     before(:each) do
@@ -176,7 +191,7 @@ describe FileAttachmentsController do
     it "loads a file_attachment as @file_attachment" do
       FileAttachment.should_receive(:find).with('1').and_return(mock_file_attachment)
       get :edit, :id => "1"
-      assigns[:file_attachment].should == @mock_file_attachment
+      assigns[:file_attachment].should eql @mock_file_attachment
     end
     
     it "loads potential containers as @file_containers" do

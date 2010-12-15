@@ -37,6 +37,7 @@ class FileAttachmentsController < FileShare::ApplicationController
     def new
     end
     def show
+      @file_attachment = FileAttachment.find(params[:id])
     end
     def index
       @orphans = FileAttachment.orphans

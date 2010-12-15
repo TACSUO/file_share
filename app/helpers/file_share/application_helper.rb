@@ -20,19 +20,76 @@ module FileShare
       end
     end
   
-    def link_to_file_attachments(wrapper_options={})
+    def link_to_file_attachments(wrapper_options={}, link_options={})
       link_wrapper(file_attachments_path, wrapper_options, {
         :link_text => 'List / Upload Files'
-      })
+      }.merge!(link_options))
     end
     
-    def render_file_share_main_menu
-      render :partial => 'file-share-shared/main_menu'
+    def links_to_edit_and_delete_file_attachment(file_attachment, wrapper_options={}, link_options={})
+      return unless has_authorization?(:update, file_attachment) || has_authorization?(:delete, file_attachment)
+      content_tag :p do
+        link_to_edit_file_attachment(file_attachment) + " " +
+        link_to_delete_file_attachment(file_attachment)
+      end
     end
     
-    def render_file_share_navigation
-      render :partial => 'file-share-shared/navigation'
+    def link_to_edit_file_attachment(file_attachment, wrapper_options={}, link_options={})
+      return unless has_authorization?(:update, file_attachment)
+      link_wrapper(edit_file_attachment_path(file_attachment), {
+        :no_wrapper => true
+      }.merge!(wrapper_options), {
+        :link_text => 'update',
+        :class => 'file_attachment_dynamic_form_link fake_button'
+      }.merge!(link_options))
     end
+    
+    def link_to_delete_file_attachment(file_attachment, wrapper_options={}, link_options={})
+      return unless has_authorization?(:delete, file_attachment)
+      link_wrapper(file_attachment_path(file_attachment), {
+        :no_wrapper => true
+      }.merge!(wrapper_options), {
+        :link_text => 'delete',
+        :method => :delete,
+        :confirm => "Did you mean to Delete #{file_attachment.name}?",
+        :class => 'fake_button'
+      }.merge!(link_options))
+    end
+    
+    def link_to_download_file_attachment(file_attachment, wrapper_options={}, link_options={})
+      return unless has_authorization?(:read, file_attachment)
+      link_wrapper(download_file_attachment_path(file_attachment), {
+        :no_wrapper => true
+      }.merge!(wrapper_options), {
+        :link_text => file_attachment.name
+      }.merge!(link_options))
+    end
+    
+    def link_to_attachable(attachable, wrapper_options={}, link_options={})
+      return unless has_authorization?(:read, attachable)
+      link_wrapper(polymorphic_path(attachable), {
+        :no_wrapper => true
+      }.merge!(wrapper_options), {
+        :link_text => attachable.name
+      }.merge!(link_options))
+    end
+    
+    def link_to_attachable_or_file_attachments(attachable, wrapper_options={}, link_options={})
+      unless attachable.blank?
+        return link_to_attachable(attachable), {
+          :no_wrapper => false
+        }, {
+          :link_text => '< back',
+          :class => 'fake_button'
+        }
+      else
+        return link_to_file_attachments({}, {
+          :link_text => '< back',
+          :class => 'fake_button'
+        })
+      end
+    end
+    
     def file_share_javascript_includes
       list = [
         "jquery-ui-1.7.2.custom.min.js",
@@ -55,6 +112,6 @@ module FileShare
         list.unshift("http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js")
       end
       list
-    end
+    end    
   end
 end

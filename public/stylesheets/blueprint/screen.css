@@ -400,3 +400,7 @@ table.tablesorter {width:auto;}
 table.tablesorter tbody td {padding:4px 12px;}
 table.tablesorter th.header {padding-right:24px;}
 table.tablesorter thead tr th {font-size:13px;}
+
+/* files */
+div.file_attachment {margin-bottom:10px;}
+p.description_file_attachment {float:right;max-width:70%;}

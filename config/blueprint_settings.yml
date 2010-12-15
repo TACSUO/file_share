@@ -6,4 +6,5 @@ default:
   - link-icons
   - pagination
   - tacs-base
+  - files
 

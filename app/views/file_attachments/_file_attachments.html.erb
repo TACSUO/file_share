@@ -4,18 +4,18 @@
     <h2>Orphaned Files</h2>
     <%= render :partial => 'file_attachments/file_attachment', :collection => orphans %>
   </div>
-  <div class="span-8 last">
+  <div id="files" class="span-8 last">
     <h2>Attached Files</h2>
     <% files.group_by(&:attachable).each do |attachable, attached_files| %>
     <div id="<%= "#{attachable.class}_#{attachable.id}" %>">
-    <h3><%= link_to attachable.name, polymorphic_path(attachable) %></h3>
+    <h3><%= link_to_attachable(attachable) %></h3>
     <%= render :partial => 'file_attachments/file_attachment', :collection => attached_files %>
     </div>
     <% end %>
   </div>
   <div style="clear:both;"></div>
   <% else %>
-  <div>
+  <div id="files">
     <% if files.present? || orphans.present? %>
     <%= render :partial => 'file_attachments/file_attachment', :collection => files.present? ? files : orphans %>
     <% end %>
@@ -24,6 +24,7 @@
 </div>
 
 <% if has_authorization?(:update, FileAttachment.new) %>
+<%- @file_containers = FileContainer.all unless defined?(@file_containers) %>
 <form id="file_attachment_dynamic_form" class="formtastic" method="post" action="<%= file_attachments_path %>" style="display: none; padding: 5px 0;">
   <div style="margin: 0pt; padding: 0pt; display: inline;">
     <input type="hidden" value="put" name="_method" />
@@ -42,7 +43,7 @@
   <% end %>
   <textarea id="file_attachment_description" style="height: 70px; width: 69%" name="file_attachment[description]"></textarea>
   <br />
-  <input type="submit" value="Update" /> | <a href="#" class="cancel_dynamic_form">Cancel</a>
+  <input type="submit" value="Update" /> | <a href="#" class="cancel_dynamic_form fake_button">Cancel</a>
 </form>
 
 <% content_for(:javascript) do %>

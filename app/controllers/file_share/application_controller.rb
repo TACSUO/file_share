@@ -2,10 +2,11 @@ class FileShare::ApplicationController < ApplicationController
   helper_method :has_authorization?
 
   private
-    # Redefine this method to implement authorization
+  unless private_method_defined?(:has_authorization?)
     def has_authorization?(*args)
       true
     end
+  end
   protected
   public
 end

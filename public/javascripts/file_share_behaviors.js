@@ -166,7 +166,7 @@ DynamicForm = $.klass({
         // get resource attr names from form input ids
         var resourceAttrContainer = resourceContainer.find('.'+this.id);
         // get resource attr vals from w/in resource container
-        this.value = resourceAttrContainer.text();
+        this.value = $.trim(resourceAttrContainer.text());
       });
       
       this.formElement.show();

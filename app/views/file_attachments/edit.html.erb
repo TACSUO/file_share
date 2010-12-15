@@ -1,6 +1,4 @@
-<%- back_path = @file_attachment.attachable_id.blank? ? 
-  file_attachments_path : polymorphic_path(@file_attachment.attachable_id) -%>
-<p><%= link_to '< back', back_path, :class => 'fake_button' %></p>
+<p><%= link_to_attachable_or_file_attachments(@file_attachment.attachable) %></p>
 
 <%= content_tag :div do %>
   <%= semantic_form_for @file_attachment do |form| %>

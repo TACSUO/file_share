@@ -1,4 +1,4 @@
-<% if defined?(container) && container %>
+<% if defined?(container) && container.present? %>
   <% new_file_attachment = FileAttachment.new(:attachable => container) %>
 <% else %>
   <% new_file_attachment = FileAttachment.new %>
@@ -11,8 +11,10 @@
   %>
 
   <% f.inputs do %>
+    <% if new_file_attachment.attachable.present? %>
     <%= f.input :attachable_id, :as => :hidden %>
     <%= f.input :attachable_type, :as => :hidden %>
+    <% end %>
     <%= f.input :name, :label => 'Name' %>
     <%= f.input :description, :label => 'Description' %>
     <%= f.input :uploaded_file, :as => :file, :label => 'Filepath' %>
