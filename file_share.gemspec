@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{file_share}
-  s.version = "0.1.3"
+  s.version = "0.1.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jason LaPier", "Jeremiah Heller"]
-  s.date = %q{2010-12-13}
+  s.date = %q{2010-12-15}
   s.description = %q{Simple versioned event management for Rails 3.}
   s.email = ["jason.lapier@gmail.com", "jeremiah@inertialbit.net"]
   s.extra_rdoc_files = [
@@ -39,6 +39,7 @@ Gem::Specification.new do |s|
     "app/views/file_attachments/_upload_form.html.erb",
     "app/views/file_attachments/edit.html.erb",
     "app/views/file_attachments/index.html.erb",
+    "app/views/file_attachments/show.html.erb",
     "app/views/file_attachments/update.js.rjs",
     "app/views/layouts/application.html.erb",
     "config/application.rb",
