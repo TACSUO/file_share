@@ -1,5 +1,5 @@
 default:
-  path: public/stylesheets/blueprint
+  path: public/stylesheets/file_share/blueprint
   plugins:
   - buttons
   - fancy-type

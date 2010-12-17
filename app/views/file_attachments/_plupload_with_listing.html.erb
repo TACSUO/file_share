@@ -117,7 +117,12 @@
     <%= link_to_if params[:std] == '1', "Several at once", url_for(:controller => controller_name, :action => action_name, :std => 0), :class => 'fake_button' %>
   </p>
 
-  <% if @file_containers.present? %>
+  <% if instance_variable_defined?("@#{controller_name.singularize}") %>
+  <% instance = instance_variable_get("@#{controller_name.singularize}") %>
+  <%= hidden_field_tag 'file_attachment[file_container]', "#{instance.class}_#{instance.id}", {
+    :id => 'file_container_select'
+  } %>
+  <% elsif !FileContainer.types.empty? %>
   <p>
     <select id="file_container_select" name="file_attachment[file_container]">
       <%= render({
@@ -128,15 +133,6 @@
       }) %>
     </select>
   </p>
-  <% elsif instance_variable_defined?("@#{controller_name.singularize}") %>
-  <% instance = instance_variable_get("@#{controller_name.singularize}") %>
-  <%= hidden_field_tag 'file_attachment[file_container]', "#{instance.class}_#{instance.id}", {
-    :id => 'file_container_select'
-  } %>
-  <% else %>
-  <%= hidden_field_tag 'file_attachment[file_container]', nil, {
-    :id => 'file_container_select'
-  } %>
   <% end %>
 
   <% if params[:std] && params[:std] == '1' %>

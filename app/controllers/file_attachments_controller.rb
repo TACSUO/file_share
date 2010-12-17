@@ -29,9 +29,6 @@ class FileAttachmentsController < FileShare::ApplicationController
       #end
       #session[:return_to] = nil
     end
-    def load_containers
-      @file_containers = FileContainer.all
-    end
   protected
   public
     def new
@@ -42,7 +39,6 @@ class FileAttachmentsController < FileShare::ApplicationController
     def index
       @orphans = FileAttachment.orphans
       @files   = FileAttachment.attached
-      load_containers
     end
   
     def download
@@ -88,7 +84,6 @@ class FileAttachmentsController < FileShare::ApplicationController
     
     def edit
       @file_attachment = FileAttachment.find(params[:id])
-      load_containers
     end
     
     def update

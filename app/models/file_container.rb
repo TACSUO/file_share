@@ -4,17 +4,17 @@ module FileContainer
   @@types ||= []
 
   def self.included(base)
+    return if @@types.include?(base)
+    
     @@types << base
   
     base.instance_eval do
       include Associations
     end
   end
-  
+
   def self.all
-    types.collect do |type|
-      type.all
-    end.flatten! || []
+    @all ||= types.map{|t| t.where(1)} # lazy load :all of each type
   end
 
   module Associations

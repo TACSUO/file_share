@@ -1,5 +1,5 @@
   <option value=""></option>
-  <% @file_containers.group_by(&:class).each do |klass, file_containers| %>
+  <% FileContainer.all.flatten.group_by(&:class).each do |klass, file_containers| %>
     <optgroup label="<%= klass.to_s.pluralize %>">
       <%= render({
         :partial => 'file_attachments/file_container_option',

@@ -89,25 +89,27 @@ module FileShare
         })
       end
     end
-    
+    def file_share_asset_prefix
+      'file_share/'
+    end
     def file_share_javascript_includes
       list = [
-        "jquery-ui-1.7.2.custom.min.js",
-        "jquery.tablesorter.min.js",
-        "jquery.string.1.0-min.js",
-        "jquery.clonePosition.js",
-        "lowpro.jquery.js",
-        "jquery.qtip-1.0.0-rc3.js",
-        "rails",
-        "file_share_behaviors",
-        "file_share",
+        "#{file_share_asset_prefix}jquery-ui-1.7.2.custom.min.js",
+        "#{file_share_asset_prefix}jquery.tablesorter.min.js",
+        "#{file_share_asset_prefix}jquery.string.1.0-min.js",
+        "#{file_share_asset_prefix}jquery.clonePosition.js",
+        "#{file_share_asset_prefix}lowpro.jquery.js",
+        "#{file_share_asset_prefix}jquery.qtip-1.0.0-rc3.js",
+        "#{file_share_asset_prefix}rails",
+        "#{file_share_asset_prefix}file_share_behaviors",
+        "#{file_share_asset_prefix}file_share",
         "http://www.google.com/jsapi",
-        "plupload/gears_init",
-        "plupload/plupload.full.min.js",
-        "plupload/jquery.plupload.queue.min.js"
+        "#{file_share_asset_prefix}plupload/gears_init",
+        "#{file_share_asset_prefix}plupload/plupload.full.min.js",
+        "#{file_share_asset_prefix}plupload/jquery.plupload.queue.min.js"
       ]
       unless Rails.env == 'production'
-        list.unshift("jquery")
+        list.unshift("#{file_share_asset_prefix}jquery")
       else
         list.unshift("http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js")
       end

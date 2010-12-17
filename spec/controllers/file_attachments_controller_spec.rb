@@ -194,13 +194,6 @@ describe FileAttachmentsController do
       assigns[:file_attachment].should eql @mock_file_attachment
     end
     
-    it "loads potential containers as @file_containers" do
-      FileContainer.stub(:types).and_return([mock_container.class])
-      mock_container.class.should_receive(:all).and_return([mock_container])
-      get :edit, :id => "1"
-      assigns[:file_containers].should eql [mock_container]
-    end
-    
   end
   
   describe ":update, :id => integer, :file_attachment => {}" do
@@ -304,12 +297,6 @@ describe FileAttachmentsController do
       FileAttachment.should_receive(:attached).and_return([mock_file_attachment])
       get :index
       assigns[:files].should eql [mock_file_attachment]
-    end
-    it "loads potential containers as @file_containers" do
-      FileContainer.stub(:types).and_return([mock_container.class])
-      mock_container.class.should_receive(:all).and_return([mock_container])
-      get :index
-      assigns[:file_containers].should eql [mock_container]
     end
     it "renders the index template" do
       get :index

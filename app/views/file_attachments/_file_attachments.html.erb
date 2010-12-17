@@ -24,14 +24,12 @@
 </div>
 
 <% if has_authorization?(:update, FileAttachment.new) %>
-<%- @file_containers = FileContainer.all unless defined?(@file_containers) %>
 <form id="file_attachment_dynamic_form" class="formtastic" method="post" action="<%= file_attachments_path %>" style="display: none; padding: 5px 0;">
   <div style="margin: 0pt; padding: 0pt; display: inline;">
     <input type="hidden" value="put" name="_method" />
     <input type="hidden" value="<%= form_authenticity_token %>" name="authenticity_token" />
   </div>
   <input type="text" id="file_attachment_name" name="file_attachment[name]" />
-  <% unless @file_containers.empty? %>
   <select id="file_attachment_file_container" name="file_attachment[file_container]">
     <%= render({
       :partial => 'file_attachments/file_container_select',
@@ -40,7 +38,6 @@
       }
     }) %>
   </select>
-  <% end %>
   <textarea id="file_attachment_description" style="height: 70px; width: 69%" name="file_attachment[description]"></textarea>
   <br />
   <input type="submit" value="Update" /> | <a href="#" class="cancel_dynamic_form fake_button">Cancel</a>

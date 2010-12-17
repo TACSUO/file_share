@@ -20,4 +20,9 @@ describe FileContainer do
     MockContainer.should_receive(:has_many)
     MockContainer.send :include, FileContainer
   end
+  it "lazy loads :all of each type" do
+    MockContainer.should_receive(:where).with(1)
+    MockContainer.send :include, FileContainer
+    FileContainer.all
+  end
 end
