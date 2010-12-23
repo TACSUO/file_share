@@ -15,16 +15,11 @@ class FileAttachment < ActiveRecord::Base
   
   validates_presence_of :name, :filepath
   
-  # belongs_to :event
   belongs_to :attachable, :polymorphic => true
   
-  #before_validation_on_create :autofill_blank_name
-  #before_validation_on_create :save_to_folder_path
   before_validation :autofill_blank_name, :on => :create
   before_validation :save_to_folder_path, :on => :create
   before_save :normalize_attachable_fields
-  # before_validation_on_update :autofill_blank_name, :if => :file_uploaded?
-  # before_validation_on_update :save_to_folder_path, :if => :file_uploaded?
   before_destroy :move_file_to_trash_folder!
 
   attr_accessor :uploaded_file
