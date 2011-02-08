@@ -3,13 +3,6 @@ module FileShare
     def link_wrapper(path, wrapper_options={}, link_options={})
       tag       = wrapper_options.delete(:tag) || :p
       link_text = link_options.delete(:link_text) || path
-      highlight = wrapper_options.delete(:highlight)
-
-      unless path.blank?
-        if current_page?(path) && (highlight.nil? || highlight)
-          wrapper_options = {:class => (wrapper_options[:class] || '') + " nav_highlight"}
-        end
-      end
 
       unless wrapper_options.delete(:no_wrapper)
         return content_tag(tag, wrapper_options) do
@@ -76,12 +69,12 @@ module FileShare
     
     def link_to_attachable_or_file_attachments(attachable, wrapper_options={}, link_options={})
       unless attachable.blank?
-        return link_to_attachable(attachable), {
+        return link_to_attachable(attachable, {
           :no_wrapper => false
         }, {
           :link_text => '< back',
           :class => 'fake_button'
-        }
+        })
       else
         return link_to_file_attachments({}, {
           :link_text => '< back',
