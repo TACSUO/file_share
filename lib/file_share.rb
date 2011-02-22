@@ -1,3 +1,3 @@
 module FileShare
-  require "file_share/engine" if defined?(Rails)
+  require "file_share/engine"
 end

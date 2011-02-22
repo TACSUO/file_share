@@ -8,3 +8,4 @@ config/database.yml
 public/files
 *.gem
 coverage/
+Gemfile.lock

@@ -8,7 +8,7 @@ FileShare::Application.load_tasks
 
 excluded_files = %w(config/database.yml public/files)
 
-Engineer::Tasks.new do |gem|
+Jeweler::Tasks.new do |gem|
   gem.name = "file_share"
   gem.summary = %Q{Provides basic file management features.}
   gem.description = %Q{Simple versioned event management for Rails 3.}
@@ -22,17 +22,17 @@ Engineer::Tasks.new do |gem|
     "db/**/*.rb"
   ]
   excluded_files.each{|f| gem.files.exclude(f)}
-  
-  # Include Bundler dependencies
-  Bundler.definition.dependencies.each do |dependency|
-    next if dependency.name == "engineer"
 
-    if (dependency.groups & [:default, :production]).any?
-      gem.add_dependency dependency.name, *dependency.requirement.as_list
-    else
-      gem.add_development_dependency dependency.name, *dependency.requirement.as_list
-    end
-  end
+  gem.add_dependency 'rails', '3.0.4'
+  gem.add_dependency 'formtastic'
+
+  gem.add_development_dependency 'jeweler'
+  gem.add_development_dependency "acts_as_fu"
+  gem.add_development_dependency "capybara"
+  gem.add_development_dependency "cucumber-rails"
+  gem.add_development_dependency "rcov"
+  gem.add_development_dependency "rspec-rails"
+  gem.add_development_dependency 'sqlite3'
 
   # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
 end
