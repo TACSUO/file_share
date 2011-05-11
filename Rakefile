@@ -23,7 +23,7 @@ Jeweler::Tasks.new do |gem|
   ]
   excluded_files.each{|f| gem.files.exclude(f)}
 
-  gem.add_dependency 'rails', '3.0.4'
+  gem.add_dependency 'rails', '3.0.7'
   gem.add_dependency 'formtastic'
 
   gem.add_development_dependency 'jeweler'

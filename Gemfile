@@ -1,4 +1,7 @@
 source 'http://rubygems.org'
-gem "formtastic"
-
+group :development, :test do
+  gem "formtastic"
+  gem "capybara"
+  gem "database_cleaner"
+end
 gemspec :path => File.expand_path('..', __FILE__)
