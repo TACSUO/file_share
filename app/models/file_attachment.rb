@@ -18,7 +18,9 @@ class FileAttachment < ActiveRecord::Base
   belongs_to :attachable, :polymorphic => true
   
   before_validation :autofill_blank_name, :on => :create
-  before_validation :save_to_folder_path, :on => :create
+  #before_validation :save_to_folder_path, :on => :create
+  before_validation :build_filepath
+  after_save :save_to_folder_path, :if => Proc.new{|file| file.uploaded_file.present?}
   before_save :normalize_attachable_fields
   before_destroy :move_file_to_trash_folder!
 
@@ -28,6 +30,13 @@ class FileAttachment < ActiveRecord::Base
   scope :attached, where('attachable_id IS NOT NULL')
   
   private
+    def attachable_folder
+      if attachable_type.blank? or attachable_id.blank?
+        "general"
+      else
+        File.join attachable_type.underscore.downcase, attachable_id.to_s
+      end
+    end
     def normalize_attachable_fields
       if attachable_type.blank? || attachable_id.blank?
         self.attachable_type = nil
@@ -35,25 +44,27 @@ class FileAttachment < ActiveRecord::Base
       end
     end
     def move_file_to_trash_folder!
-      ensure_folder_path_exists(TRASH_FOLDER)
-      trash_filename = generate_unique_filename(TRASH_FOLDER)
+      trash_folder = File.join FOLDER_PATH, attachable_folder, 'trash'
+      ensure_folder_path_exists(trash_folder)
+      trash_filename = generate_unique_filename(trash_folder)
       
-      FileUtils.mv(full_path, File.join(TRASH_FOLDER, trash_filename))
+      FileUtils.mv(full_path, File.join(trash_folder, trash_filename))
       
-      unless File.exists?(File.join(TRASH_FOLDER, trash_filename))
-        raise Errno::ENOENT("The file at #{File.join(FOLDER_ROOT, filepath)} should be in the trash at #{File.join(TRASH_FOLDER, trash_filename)}")
+      unless File.exists?(File.join(trash_folder, trash_filename))
+        raise Errno::ENOENT("The file at #{File.join(FOLDER_ROOT, filepath)} should be in the trash at #{File.join(trash_folder, trash_filename)}")
       end
-      logger.info("Moved File Attachment to Trash: #{File.join(TRASH_FOLDER, trash_filename)}")
+      logger.info("Moved File Attachment to Trash: #{File.join(trash_folder, trash_filename)}")
     end
     def save_to_folder_path
       ensure_folder_path_exists
       build_filepath
       File.open(full_path, "wb") { |f| f.write(uploaded_file.read) }
       return true if file_saved?
-      errors.add_to_base("The file could not be saved. Please try again or contact someone and make a note of how many files, what kind, etc.")
+      errors.add(:base, "The file could not be saved. Please try again or contact someone and make a note of how many files, what kind, etc.")
       false
     end
-    def generate_unique_filename(dest_path=FOLDER_PATH)
+    def generate_unique_filename(dest_path=nil)
+      dest_path ||= File.join FOLDER_PATH, attachable_folder
       base_filename = File.basename(uploaded_file && uploaded_file.original_filename || filepath)
       new_filename = base_filename
       path = File.join dest_path, new_filename
@@ -65,11 +76,12 @@ class FileAttachment < ActiveRecord::Base
       end
       new_filename
     end
-    def ensure_folder_path_exists(dest_path=FOLDER_PATH)
+    def ensure_folder_path_exists(dest_path=nil)
+      dest_path ||= File.join FOLDER_PATH, attachable_folder
       FileUtils.mkdir_p dest_path
     end
     def build_filepath
-      self.filepath = File.join FOLDER, generate_unique_filename
+      self.filepath = File.join FOLDER, attachable_folder, generate_unique_filename
     end
     def autofill_blank_name
       if name.blank?
@@ -79,7 +91,7 @@ class FileAttachment < ActiveRecord::Base
   protected
   public
     def full_path
-      "#{FOLDER_ROOT}/#{filepath}"
+      File.join FOLDER_ROOT, filepath
     end
     def file_saved?
       return true if File.exists?(full_path) && File.basename(full_path) != FOLDER

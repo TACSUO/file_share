@@ -1,57 +1,66 @@
 require 'spec_helper'
 
 describe FileAttachment do
-  
+
   include ActionDispatch::TestProcess # for fixture_file_upload
-  
+
   before(:each) do
-    @path = File.join(Rails.root.to_s, 'public', 'files')
+    File.stub(:open)
+    @path = File.join(Rails.root.to_s, 'public', 'files', 'general')
     @full_path = File.join(@path, 'somefile.txt')
     @trash_path = File.join(@path, 'trash', 'somefile.txt')
-    
-    raise "Please back up and clean out public/files before running this spec" if File.exists?(@full_path) || File.exists?(File.join(@path, 'somefile-1.txt'))
-    
-    @file_attachment = FileAttachment.create!({
+
+    @file_attachment = FileAttachment.new({
       :description => 'unique description',
       :uploaded_file => fixture_file_upload(File.join(Rails.root.to_s, 'spec', 'fixtures', 'somefile.txt'), 'text/plain')
     })
+    @file_attachment.valid? # force build_filepath
   end
-  
-  after(:each) do  
-    if File.exists?(@full_path)
-      File.delete(@full_path)
-    end
-    if File.exists?(@trash_path)
-      File.delete(@trash_path)
-    end
-  end
-  
+
   it "should generate a unique name" do
-    FileUtils.mkdir_p @path
-    
-    new_file = FileAttachment.create!({
+    File.stub(:open)
+    File.stub(:exists?).with("#{@path}/somefile.txt"){ true }
+    File.stub(:exists?).with("#{@path}/somefile-1.txt"){ false }
+    File.should_receive(:open).with("#{@path}/somefile-1.txt", "wb").at_least(:once)
+    new_file = FileAttachment.create({
       :description => 'other description',
       :uploaded_file => fixture_file_upload(File.join(Rails.root.to_s, 'spec', 'fixtures', 'somefile.txt'), 'text/plain')
     })
-    
-    new_file.filepath.should_not == 'files/somefile.txt'
-    new_file.filepath.should == 'files/somefile-1.txt'
-    File.exists?(@full_path).should be_true
-    
-    File.delete(File.join(@path, 'somefile-1.txt'))
   end
   
   it "should know whether its file actually exists" do
+    File.stub(:exists?).with("#{@path}/somefile.txt"){ true }
     @file_attachment.file_saved?.should be_true
-    File.exists?(@full_path).should be_true
-    File.delete(@full_path)
+    File.stub(:exists?).with("#{@path}/somefile.txt"){ false }
     @file_attachment.file_saved?.should be_false
   end
   
   it "should move its file to the trash when destroyed" do
-    File.exists?(@full_path).should be_true
+    @file_attachment.should_receive(:move_file_to_trash_folder!)
     @file_attachment.destroy
-    File.exists?(@full_path).should be_false
-    File.exists?(@trash_path).should be_true
+  end
+  
+  it "should know how to throw files into the trash" do
+    @file_attachment.stub(:generate_unique_filename){ "somefile.txt" }
+    File.stub(:exists?){ true }
+    FileUtils.should_receive(:mv).with(@full_path, @trash_path)
+    @file_attachment.send(:move_file_to_trash_folder!)
+  end
+  
+  it "should be able to create a folder name that mirrors the attachable_type and attachable_id" do
+    @file_attachment.send(:attachable_folder).should eq "general"
+    module Blog; class Post; extend ActiveModel::Naming; def self.base_class; Blog::Post; end end end
+    blog_post = mock_model(Blog::Post)
+    @file_attachment.attachable = blog_post
+    @file_attachment.send(:attachable_folder).should eq "blog/post/#{blog_post.id}"
+    class Event; extend ActiveModel::Naming; def self.base_class; Event; end end
+    event = mock_model(Event)
+    @file_attachment.attachable = event
+    @file_attachment.send(:attachable_folder).should eq "event/#{event.id}"
+  end
+  
+  it "should ensure that the destination folder exists" do
+    FileUtils.should_receive(:mkdir_p).with(@path)
+    @file_attachment.send(:ensure_folder_path_exists)
   end
 end
