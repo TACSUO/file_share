@@ -53,6 +53,7 @@ describe FileAttachment do
     blog_post = mock_model(Blog::Post)
     @file_attachment.attachable = blog_post
     @file_attachment.send(:attachable_folder).should eq "blog/post/#{blog_post.id}"
+    
     class Event; extend ActiveModel::Naming; def self.base_class; Event; end end
     event = mock_model(Event)
     @file_attachment.attachable = event
@@ -62,5 +63,39 @@ describe FileAttachment do
   it "should ensure that the destination folder exists" do
     FileUtils.should_receive(:mkdir_p).with(@path)
     @file_attachment.send(:ensure_folder_path_exists)
+  end
+  
+  context "should be able to update filepath in db & fs" do
+    before(:each) do
+      @old_path = File.join "files", "somefile.txt"
+      @file_attachment.filepath = @old_path
+      FileUtils.stub(:mv).with("#{Rails.root}/public/#{@old_path}", @full_path)
+    end
+    it "update the fs" do
+      FileUtils.should_receive(:mv).with("#{Rails.root}/public/#{@old_path}", @full_path)
+      @file_attachment.update_filepath
+    end
+    context "fs update succeeds :)" do
+      it "update the db" do
+        p "stubbing obj under test"
+        @file_attachment.stub(:file_saved?){ true }
+        @file_attachment.should_receive(:save)
+        @file_attachment.update_filepath
+      end
+    end
+    context "fs update fails :(" do
+      before(:each) do
+        @file_attachment.stub(:file_saved?){ false }
+      end
+      it "add error to base" do
+        p "stubbing obj under test"
+        @file_attachment.errors.should_receive(:add).with(:base, "Error updating filepath for #{@file_attachment.name}")
+        @file_attachment.update_filepath
+      end
+      it "return false" do
+        p "stubbing obj under test"
+        @file_attachment.update_filepath.should be_false
+      end
+    end
   end
 end

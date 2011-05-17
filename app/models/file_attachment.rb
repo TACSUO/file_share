@@ -73,6 +73,7 @@ class FileAttachment < ActiveRecord::Base
         count += 1
         new_filename = base_filename.gsub File.extname(base_filename), "-#{count}#{File.extname(base_filename)}"
         path = File.join dest_path, new_filename
+        raise "Unable to generate a unique filename for #{base_filename}; tried #{count} times." if count > 99
       end
       new_filename
     end
@@ -105,5 +106,20 @@ class FileAttachment < ActiveRecord::Base
       p = container.split("_")
       self.attachable_type = p[0].blank? ? nil : p[0]
       self.attachable_id = p[1].blank? ? nil : p[1]
+    end
+    
+    # update fs & db filepaths with updated values (eg after dev changes)
+    def update_filepath
+      old_path = full_path.dup
+      build_filepath
+      FileUtils.mv(old_path, full_path)
+      unless file_saved?
+        msg = "Error updating filepath for #{name}"
+        logger.error(msg)
+        errors.add(:base, msg)
+        false
+      else
+        self.save
+      end
     end
 end
