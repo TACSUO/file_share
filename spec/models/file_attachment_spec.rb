@@ -4,6 +4,9 @@ describe FileAttachment do
 
   include ActionDispatch::TestProcess # for fixture_file_upload
 
+  module Blog; class Post; extend ActiveModel::Naming; def self.base_class; Blog::Post; end end end
+  class Event; extend ActiveModel::Naming; def self.base_class; Event; end end
+  
   before(:each) do
     File.stub(:open)
     @path = File.join(Rails.root.to_s, 'public', 'files', 'general')
@@ -17,15 +20,25 @@ describe FileAttachment do
     @file_attachment.valid? # force build_filepath
   end
 
-  it "should generate a unique name" do
-    File.stub(:open)
-    File.stub(:exists?).with("#{@path}/somefile.txt"){ true }
-    File.stub(:exists?).with("#{@path}/somefile-1.txt"){ false }
-    File.should_receive(:open).with("#{@path}/somefile-1.txt", "wb").at_least(:once)
-    new_file = FileAttachment.create({
-      :description => 'other description',
-      :uploaded_file => fixture_file_upload(File.join(Rails.root.to_s, 'spec', 'fixtures', 'somefile.txt'), 'text/plain')
-    })
+  context "generating a unique filename" do
+    before(:each) do
+      @new_file = FileAttachment.new({
+        :description => 'other description',
+        :uploaded_file => fixture_file_upload(File.join(Rails.root.to_s, 'spec', 'fixtures', 'somefile.txt'), 'text/plain')
+      })
+    end
+    it "should generate a unique name on create" do
+      File.stub(:open)
+      File.stub(:exists?).with("#{@path}/somefile.txt"){ true }
+      File.stub(:exists?).with("#{@path}/somefile-1.txt"){ false }
+      File.should_receive(:open).with("#{@path}/somefile-1.txt", "wb").at_least(:once)
+      @new_file.save
+    end
+    it "should not generate a unique name on update" do
+      @new_file.save
+      @new_file.should_not_receive(:generate_unique_filename)
+      @new_file.save
+    end
   end
   
   it "should know whether its file actually exists" do
@@ -47,17 +60,25 @@ describe FileAttachment do
     @file_attachment.send(:move_file_to_trash_folder!)
   end
   
-  it "should be able to create a folder name that mirrors the attachable_type and attachable_id" do
-    @file_attachment.send(:attachable_folder).should eq "general"
-    module Blog; class Post; extend ActiveModel::Naming; def self.base_class; Blog::Post; end end end
-    blog_post = mock_model(Blog::Post)
-    @file_attachment.attachable = blog_post
-    @file_attachment.send(:attachable_folder).should eq "blog/post/#{blog_post.id}"
-    
-    class Event; extend ActiveModel::Naming; def self.base_class; Event; end end
-    event = mock_model(Event)
-    @file_attachment.attachable = event
-    @file_attachment.send(:attachable_folder).should eq "event/#{event.id}"
+  context "determine storage path" do
+    it "uses public/files/general without an attachable" do
+      @file_attachment.send(:attachable_folder).should eq "general"
+      @file_attachment.filepath.should eq "public/files/general/somefile.txt"
+    end
+    it "uses public/files/blog/post/:post_id with an attachable of class Blog::Post" do
+      blog_post = mock_model(Blog::Post)
+      @file_attachment.attachable = blog_post
+      @file_attachment.valid?
+      @file_attachment.send(:attachable_folder).should eq "blog/post/#{blog_post.id}"
+      @file_attachment.filepath.should eq "public/files/blog/post/#{blog_post.id}/somefile.txt"
+    end
+    it "uses public/files/event/:event_id with an attachable of class Event" do
+      event = mock_model(Event)
+      @file_attachment.attachable = event
+      @file_attachment.valid?
+      @file_attachment.send(:attachable_folder).should eq "event/#{event.id}"
+      @file_attachment.filepath.should eq "public/files/event/#{event.id}/somefile.txt"
+    end
   end
   
   it "should ensure that the destination folder exists" do
@@ -67,12 +88,12 @@ describe FileAttachment do
   
   context "should be able to update filepath in db & fs" do
     before(:each) do
-      @old_path = File.join "files", "somefile.txt"
+      @old_path = File.join "public", "files", "somefile.txt"
       @file_attachment.filepath = @old_path
-      FileUtils.stub(:mv).with("#{Rails.root}/public/#{@old_path}", @full_path)
+      FileUtils.stub(:mv).with("#{Rails.root}/#{@old_path}", @full_path)
     end
     it "update the fs" do
-      FileUtils.should_receive(:mv).with("#{Rails.root}/public/#{@old_path}", @full_path)
+      FileUtils.should_receive(:mv).with("#{Rails.root}/#{@old_path}", @full_path)
       @file_attachment.update_filepath
     end
     context "fs update succeeds :)" do
