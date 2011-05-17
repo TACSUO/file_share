@@ -4,7 +4,6 @@ module FileAttachmentsHelper
     return unless has_authorization?(:read, file_attachment)
     content_tag :p, {
       :id => "file_attachment_#{file_attachment.id}_description",
-      :style => "max-width: 70%; float: right;",
       :class => 'file_attachment_description'
     } do
       file_attachment.description
