@@ -93,7 +93,13 @@ class FileAttachment < ActiveRecord::Base
   protected
   public
     def full_path
-      File.join Rails.root, filepath
+      # for backward compat; previous releases stored filepath relative to 'public'.
+      # ie 'public' was not included in the filepath
+      if filepath.include? REL_ROOT_DIR
+        File.join Rails.root, filepath
+      else
+        File.join Rails.root, 'public', filepath
+      end
     end
     def file_saved?
       return true if File.exists?(full_path) && File.basename(full_path) != REL_ROOT_DIR.split("/").last
