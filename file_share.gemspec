@@ -4,13 +4,13 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{file_share}
+  s.name = "file_share"
   s.version = "0.1.15"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jason LaPier", "Jeremiah Heller"]
-  s.date = %q{2011-05-17}
-  s.description = %q{Simple versioned event management for Rails 3.}
+  s.date = "2011-11-30"
+  s.description = "Simple file management for Rails 3."
   s.email = ["jason.lapier@gmail.com", "jeremiah@inertialbit.net"]
   s.extra_rdoc_files = [
     "README"
@@ -86,6 +86,7 @@ Gem::Specification.new do |s|
     "public/javascripts/file_share/jquery.tablesorter.min.js",
     "public/javascripts/file_share/lowpro.jquery.js",
     "public/javascripts/file_share/plupload/gears_init.js",
+    "public/javascripts/file_share/plupload/jquery.plupload.queue.js",
     "public/javascripts/file_share/plupload/jquery.plupload.queue.min.js",
     "public/javascripts/file_share/plupload/plupload.browserplus.min.js",
     "public/javascripts/file_share/plupload/plupload.flash.min.js",
@@ -178,16 +179,22 @@ Gem::Specification.new do |s|
     "spec/models/file_container_spec.rb",
     "spec/spec_helper.rb"
   ]
-  s.homepage = %q{http://github.com/inertialbit/file_share}
+  s.homepage = "https://github.com/TACSUO/file_share"
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.5.2}
-  s.summary = %q{Provides basic file management features.}
+  s.rubygems_version = "1.8.11"
+  s.summary = "Provides basic file management features."
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<file_share>, [">= 0"])
+      s.add_development_dependency(%q<formtastic>, [">= 0"])
+      s.add_development_dependency(%q<capybara>, [">= 0"])
+      s.add_development_dependency(%q<database_cleaner>, [">= 0"])
+      s.add_development_dependency(%q<formtastic>, [">= 0"])
+      s.add_development_dependency(%q<capybara>, [">= 0"])
+      s.add_development_dependency(%q<database_cleaner>, [">= 0"])
       s.add_development_dependency(%q<formtastic>, [">= 0"])
       s.add_development_dependency(%q<capybara>, [">= 0"])
       s.add_development_dependency(%q<database_cleaner>, [">= 0"])
@@ -283,6 +290,20 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rcov>, [">= 0"])
       s.add_development_dependency(%q<rspec-rails>, [">= 0"])
       s.add_development_dependency(%q<sqlite3>, [">= 0"])
+      s.add_development_dependency(%q<jeweler>, [">= 0"])
+      s.add_development_dependency(%q<acts_as_fu>, [">= 0"])
+      s.add_development_dependency(%q<capybara>, [">= 0"])
+      s.add_development_dependency(%q<cucumber-rails>, [">= 0"])
+      s.add_development_dependency(%q<rcov>, [">= 0"])
+      s.add_development_dependency(%q<rspec-rails>, [">= 0"])
+      s.add_development_dependency(%q<sqlite3>, [">= 0"])
+      s.add_development_dependency(%q<jeweler>, [">= 0"])
+      s.add_development_dependency(%q<acts_as_fu>, [">= 0"])
+      s.add_development_dependency(%q<capybara>, [">= 0"])
+      s.add_development_dependency(%q<cucumber-rails>, [">= 0"])
+      s.add_development_dependency(%q<rcov>, [">= 0"])
+      s.add_development_dependency(%q<rspec-rails>, [">= 0"])
+      s.add_development_dependency(%q<sqlite3>, [">= 0"])
       s.add_runtime_dependency(%q<rails>, ["~> 3.0.7"])
       s.add_runtime_dependency(%q<formtastic>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
@@ -315,6 +336,12 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<formtastic>, [">= 0"])
       s.add_dependency(%q<capybara>, [">= 0"])
       s.add_dependency(%q<database_cleaner>, [">= 0"])
+      s.add_dependency(%q<formtastic>, [">= 0"])
+      s.add_dependency(%q<capybara>, [">= 0"])
+      s.add_dependency(%q<database_cleaner>, [">= 0"])
+      s.add_dependency(%q<formtastic>, [">= 0"])
+      s.add_dependency(%q<capybara>, [">= 0"])
+      s.add_dependency(%q<database_cleaner>, [">= 0"])
       s.add_dependency(%q<acts_as_fu>, [">= 0"])
       s.add_dependency(%q<capybara>, [">= 0"])
       s.add_dependency(%q<cucumber-rails>, [">= 0"])
@@ -326,6 +353,20 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<cucumber-rails>, [">= 0"])
       s.add_dependency(%q<rcov>, [">= 0"])
       s.add_dependency(%q<rspec-rails>, [">= 0"])
+      s.add_dependency(%q<jeweler>, [">= 0"])
+      s.add_dependency(%q<acts_as_fu>, [">= 0"])
+      s.add_dependency(%q<capybara>, [">= 0"])
+      s.add_dependency(%q<cucumber-rails>, [">= 0"])
+      s.add_dependency(%q<rcov>, [">= 0"])
+      s.add_dependency(%q<rspec-rails>, [">= 0"])
+      s.add_dependency(%q<sqlite3>, [">= 0"])
+      s.add_dependency(%q<jeweler>, [">= 0"])
+      s.add_dependency(%q<acts_as_fu>, [">= 0"])
+      s.add_dependency(%q<capybara>, [">= 0"])
+      s.add_dependency(%q<cucumber-rails>, [">= 0"])
+      s.add_dependency(%q<rcov>, [">= 0"])
+      s.add_dependency(%q<rspec-rails>, [">= 0"])
+      s.add_dependency(%q<sqlite3>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
       s.add_dependency(%q<acts_as_fu>, [">= 0"])
       s.add_dependency(%q<capybara>, [">= 0"])
@@ -422,6 +463,12 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<formtastic>, [">= 0"])
     s.add_dependency(%q<capybara>, [">= 0"])
     s.add_dependency(%q<database_cleaner>, [">= 0"])
+    s.add_dependency(%q<formtastic>, [">= 0"])
+    s.add_dependency(%q<capybara>, [">= 0"])
+    s.add_dependency(%q<database_cleaner>, [">= 0"])
+    s.add_dependency(%q<formtastic>, [">= 0"])
+    s.add_dependency(%q<capybara>, [">= 0"])
+    s.add_dependency(%q<database_cleaner>, [">= 0"])
     s.add_dependency(%q<acts_as_fu>, [">= 0"])
     s.add_dependency(%q<capybara>, [">= 0"])
     s.add_dependency(%q<cucumber-rails>, [">= 0"])
@@ -433,6 +480,20 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<cucumber-rails>, [">= 0"])
     s.add_dependency(%q<rcov>, [">= 0"])
     s.add_dependency(%q<rspec-rails>, [">= 0"])
+    s.add_dependency(%q<jeweler>, [">= 0"])
+    s.add_dependency(%q<acts_as_fu>, [">= 0"])
+    s.add_dependency(%q<capybara>, [">= 0"])
+    s.add_dependency(%q<cucumber-rails>, [">= 0"])
+    s.add_dependency(%q<rcov>, [">= 0"])
+    s.add_dependency(%q<rspec-rails>, [">= 0"])
+    s.add_dependency(%q<sqlite3>, [">= 0"])
+    s.add_dependency(%q<jeweler>, [">= 0"])
+    s.add_dependency(%q<acts_as_fu>, [">= 0"])
+    s.add_dependency(%q<capybara>, [">= 0"])
+    s.add_dependency(%q<cucumber-rails>, [">= 0"])
+    s.add_dependency(%q<rcov>, [">= 0"])
+    s.add_dependency(%q<rspec-rails>, [">= 0"])
+    s.add_dependency(%q<sqlite3>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])
     s.add_dependency(%q<acts_as_fu>, [">= 0"])
     s.add_dependency(%q<capybara>, [">= 0"])
