@@ -87,7 +87,7 @@ module FileShare
     end
     def file_share_javascript_includes
       list = [
-        "#{file_share_asset_prefix}jquery-ui-1.7.2.custom.min.js",
+        "#{file_share_asset_prefix}jquery-ui-1.8.16.custom.min.js",
         "#{file_share_asset_prefix}jquery.tablesorter.min.js",
         "#{file_share_asset_prefix}jquery.string.1.0-min.js",
         "#{file_share_asset_prefix}jquery.clonePosition.js",
@@ -98,13 +98,14 @@ module FileShare
         "#{file_share_asset_prefix}file_share",
         "http://www.google.com/jsapi",
         "#{file_share_asset_prefix}plupload/gears_init",
-        "#{file_share_asset_prefix}plupload/plupload.full.min.js",
-        "#{file_share_asset_prefix}plupload/jquery.plupload.queue.min.js"
+        "#{file_share_asset_prefix}plupload/plupload.min.js",
+        "#{file_share_asset_prefix}plupload/jquery.plupload.queue.js"
       ]
       unless Rails.env == 'production'
         list.unshift("#{file_share_asset_prefix}jquery")
       else
-        list.unshift("http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js")
+        # list.unshift("http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js")
+        list.unshift("http://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js")
       end
       list
     end    
